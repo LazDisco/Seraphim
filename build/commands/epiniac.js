@@ -3,7 +3,7 @@ import winston from 'winston' // Winston for Logging
 module.exports.run = async (msg, args, client, db, ID) => {
 
     // brigands only plox
-    if (ID !== "372846495608602624") return msg.reply("ERR: This command is server restricted.")
+    if (ID !== "356491798228631552") return msg.reply("ERR: This command is server restricted.")
 
     let input = msg.content.split(/\n+/g) // // Split data via new line
     let userID = msg.author.id; // ID of peson posting report

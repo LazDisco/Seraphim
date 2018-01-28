@@ -16,7 +16,7 @@ const keyTemplate = require("../defaults.json").keyTemplate // Have a guess
 
 module.exports.run = async (msg, args, client, db, ID) => {
     // brigands only plox
-    if (ID !== "372846495608602624") return msg.reply("ERR: This command is server restricted.")
+    if (ID !== "356491798228631552") return msg.reply("ERR: This command is server restricted.")
     const dateFormat = "DD-MM-YY mm:HH"; // format the date how normal people do. (not American)
 
     const formatReport = (res) => {

@@ -1,5 +1,19 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+build/db/568f9711-da1a-4b24-a3d3-0de5d6ae5e79
+build/db/7d96f2b6-5de9-45c9-ac5b-0f61ef8757b0
+build/db/db35090c-82fc-4474-bc8b-be92635694e9
+build/db/dirlock
+build/db/log_file
+build/db/metadata
 rethinkdb.exe
-./build/secrets.json
-./build/cmd
-./.vscode
-./node_modules
+settings.json
+secrets.json

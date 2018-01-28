@@ -1,0 +1,35 @@
+{
+  "name": "thebrigandbot",
+  "version": "2.1.2",
+  "main": "index.js",
+  "license": "CC BY-NC-SA 4.0",
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-register": "^6.26.0"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "discord.js": "^11.3.0",
+    "discoverygc": "^1.0.1",
+    "fs": "0.0.1-security",
+    "moment": "^2.20.1",
+    "require-dir": "^0.3.2",
+    "rethinkdbdash": "^2.3.31",
+    "string-format": "^0.5.0",
+    "winston": "^2.4.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "build": "babel build --out-dir lib"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ],
+    "plugins": [
+      "transform-runtime"
+    ]
+  }
+}

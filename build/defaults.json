@@ -1,0 +1,5 @@
+{
+    "prefix": "|",
+    "playerlistChannel": "playerlist",
+    "reportTemplate": "**User:** `{0}`\n **Ship Name:** {1}\n **Cargo:** {2}\n **Amount:**{3}\n **Screenshots:** {4}\n **Report Filed:**{5}"
+}

@@ -2,7 +2,6 @@ import winston from 'winston'; // Winston for logging
 import { commands } from "../index.js"; // Import commands because I made a mistake!
 import { client } from "../index.js"; // Wow. I am starting to see how this could be more efficent.
 import { secrets } from "../index.js"; // Ok I fucked up. Move along.
-import format from 'string-format';
 
 import fs from 'fs'; // Import FS for command handler.
 

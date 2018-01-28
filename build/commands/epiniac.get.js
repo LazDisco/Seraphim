@@ -39,15 +39,15 @@ module.exports.run = async (msg, args, client, db, ID) => {
 
     const formatKey = (res) => {
         const {
-            id: key,
-            timestamp: time
+            id: key, // The ID element
+            timestamp: time // The timestamp element
         } = res
         
         return format(keyTemplate, key, moment(time).format(dateFormat));
     }
 
     const dbERR = (err) => { // stupid way of saying if(err) throw (err)
-        winston.error(err)
+        winston.error(err) // That being said, it is nice to get a message in Discord when something messes up
         msg.channel.send("ERR: Something has gone wrong. See log file for details.")
     }
 
@@ -58,26 +58,26 @@ module.exports.run = async (msg, args, client, db, ID) => {
         var reportAmount = parseInt(args[1])
         db.getEpiniacRecentReports(reportAmount) // Get the amount of reports specified
             .then((res) => {
-                sendArray(res.map(formatReport), msg.channel);
+                sendArray(res.map(formatReport), msg.channel); // Cycle through all of the reports (A lot!)
             })
-            .catch(dbERR)
+            .catch(dbERR) // If there is an error, log it and move on.
     }
     // Count overall reports in the database
     if (args[0] == "count") {
         db.countEpiniacReports()
             .then((count) => msg.channel.send(`The Epiniac Datahub currently has a total of ${count} shipping reports.`))
-            .catch(dbERR)
+            .catch(dbERR) // If there is an error, log it and move on.
     }
 
     // Count reports from specific person
     if (args[0] == "count.id") {
-        db.countEpiniacIndividualReports(msg.author.id)
+        db.countEpiniacIndividualReports(args[1]) // Count reports of ID given
             .then((count) => msg.channel.send(`The Epiniac Datahub currently has a total of ${count} shipping reports submitted by ${msg.author.username}`))
-            .catch(dbERR)
+            .catch(dbERR) // If there is an error, log it and move on.
     }
     // Get report by specific ID
     if (args[0] == "get") {
-        db.getEpiniacReport(args[1])
+        db.getEpiniacReport(args[1]) // Get report by it's primary key
             .then((res) => {
                 if (res) {
                     msg.channel.send(formatReport(res));
@@ -85,66 +85,66 @@ module.exports.run = async (msg, args, client, db, ID) => {
                     msg.channel.send("ERR: Cannot find selected report.");
                 }
             })
-            .catch(dbERR)
+            .catch(dbERR) // If there is an error, log it and move on.
     }
 
     if (args[0] == "list") {
         if (!args[1]) return msg.reply("ERR: User didn't specify a search term.")
-        if (args[1] == "id") {
+        if (args[1] == "id") { // We want to search via ID
             if (!args[2]) { // Default to the senders information.
                 db.getEpiniacReportByID(msg.author.id)
                     .then((res) => {
                         if (res) {
-                            sendArray(res.map(formatKey), msg.channel);
+                            sendArray(res.map(formatKey), msg.channel); // Cycle through all the different reports
                         }
                         if (!res) {
                             msg.channel.send("ERR Cannot find any reports matching your search criteria.")
                         }
                     })
-                    .catch(dbERR)
+                    .catch(dbERR) // If there is an error, log it and move on.
             }
             if (args[2]) {
-                db.getEpiniacReportByID(args[2])
+                db.getEpiniacReportByID(args[2]) // Search for a specific ID within the DB
                     .then((res) => {
                         if (res) {
-                            sendArray(res.map(formatKey), msg.channel);
+                            sendArray(res.map(formatKey), msg.channel); // Cycle through the reports
                         }
                         if (!res) {
                             msg.channel.send("ERR Cannot find any reports matching your search criteria.")
                         }
                     })
-                    .catch(dbERR)
+                    .catch(dbERR) // If there is an error, log it and move on.
             }
         }
 
-        if (args[1] == "ship") {
+        if (args[1] == "ship") { // We want to search for ships
             if (!args[2]) return msg.reply("ERR: User didn't specify a ship name.")
             if (args[2]) {
-                db.getEpiniacReportByShip(args[2])
+                db.getEpiniacReportByShip(args[2]) // Find ships matching value we give it
                     .then((res) => {
                         if (res) {
-                            sendArray(res.map(formatKey), msg.channel);
+                            sendArray(res.map(formatKey), msg.channel); // Cycle through them
                         }
                         if (!res) {
                             msg.channel.send("ERR Cannot find any reports matching your search criteria.")
                         }
                     })
-                    .catch(dbERR)
+                    .catch(dbERR) // If there is an error, log it and move on.
             }
         }
-        if (args[1] == "cargo") {
+        if (args[1] == "cargo") { // We want to search for cargo
             if (!args[2]) return msg.reply("ERR: User didn't specify a cargo type.")
             if (args[2]) {
-                db.getEpiniacReportByCargo(args[2])
+                db.getEpiniacReportByCargo(args[2]) // Get cargo from name provided
                     .then((res) => {
                         if (res) {
-                            sendArray(res.map(formatKey), msg.channel);
+                            sendArray(res.map(formatKey), msg.channel); // Cycle through many reports
                         }
                         if (!res) {
                             msg.channel.send("ERR Cannot find any reports matching your search criteria.")
                         }
                     })
-                    .catch(dbERR)
+                    .catch(dbERR) // If there is an error, log it and move on.
             }
         }
     } else {

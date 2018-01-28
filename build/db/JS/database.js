@@ -2,7 +2,7 @@ import rethink from 'rethinkdbdash'; // Import the rethinkdb dash driver
 import Promise from 'bluebird'; // Our promises package
 import winston from 'winston'; // Time to log shit
 
-let defaultPrefix = "|"
+let defaultPrefix = "|" 
 let defaultPlayerlistChannel = "playerlist"
 
 module.exports = class { // This is used when we create a new instance in index.js
@@ -38,6 +38,7 @@ module.exports = class { // This is used when we create a new instance in index.
         }).run();
     }
 
+    // Create table for Epiniac - alt use, add to .finally(() => of init()
     addEpiniac() {
         return this.r.tableCreate('epiniac').run() // Create a table just for PoB supplies
             .then(() => winston.info("Epiniac table created.")) // If it works
@@ -57,25 +58,24 @@ module.exports = class { // This is used when we create a new instance in index.
         }).run();
     }
 
+    // Get list of keys that have a common reporter
     getEpiniacReportByID(userID) {
         return this.r.table('epiniac').filter({ reporter: userID }).pluck('id', 'timestamp').run()
     }
 
-    getEpiniacReportByCargo(userID) {
-        return this.r.table('epiniac').filter({ cargo: userID }).pluck('id', 'timestamp').coerceTo('array').run()
+    // Get list of keys that have a common cargo type
+    getEpiniacReportByCargo(cargoType) {
+        return this.r.table('epiniac').filter({ cargo: cargoType }).pluck('id', 'timestamp').coerceTo('array').run()
     }
 
-    getEpiniacReportByShip(userID) {
-        return this.r.table('epiniac').filter({ ship: userID }).pluck('id', 'timestamp').run()
+    // Get list of keys that have a common ship name
+    getEpiniacReportByShip(shipName) {
+        return this.r.table('epiniac').filter({ ship: shipName }).pluck('id', 'timestamp').run()
     }
 
     // Count number of reports made to epiniac
     countEpiniacReports() {
         return this.r.table('epiniac').count().run();
-    }
-
-    testEpiniac() {
-        return this.r.table('epiniac').get('a818e178-7f60-4ba8-adc9-7974d76e8078');
     }
 
     // Count number of reports made to epiniac by a certain person
@@ -90,6 +90,7 @@ module.exports = class { // This is used when we create a new instance in index.
         return this.r.table('epiniac').orderBy('timestamp').limit(userCount).run();
     }
 
+    // Get a report with a specific primary key
     getEpiniacReport(id) {
         return this.r.table('epiniac').get(id).run();
     }

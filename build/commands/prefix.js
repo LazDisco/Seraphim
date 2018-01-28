@@ -6,14 +6,14 @@ module.exports.run = async (msg, args, client, db, id) => {
     }
 
     msg.channel.send(`Info: Prefix has been changed to \`${newPrefix}\``)
-    
+
     db.setGuildPrefix(id, newPrefix)
-    .then(() => winston.info(`Prefix: ${id} has changed their prefix to ${newPrefix}`))
-    .catch(winston.error)
+        .then(() => winston.info(`Prefix: ${id} has changed their prefix to ${newPrefix}`))
+        .catch(winston.error)
 
-    
 
-    
+
+
 }
 
 module.exports.help = {

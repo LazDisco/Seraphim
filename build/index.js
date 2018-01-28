@@ -20,10 +20,10 @@ const db = new Database(); // Create a new database instance
 db.init() // Initialise it so it can be used
 
 fs.readdir("./build/commands/", (err, files) => { // Scan that folder for our commands
-    if(err) winston.error(err) // Log my errors senpai.
+    if (err) winston.error(err) // Log my errors senpai.
 
     let jsfiles = files.filter(f => f.split(".").pop() === "js") // Only pick files that have .js at the end
-    if(jsfiles.length <= 0 ) {
+    if (jsfiles.length <= 0) {
         winston.info("ERR: Missing command files.") // There are no command files, or no commands folder.
         return
     }

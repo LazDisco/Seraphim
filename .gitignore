@@ -17,3 +17,4 @@ build/db/metadata
 rethinkdb.exe
 settings.json
 secrets.json
+package-lock.json

@@ -14,7 +14,7 @@ module.exports.run = async (msg, args, client, db, id) => {
     let cargoName = input[2].replace(new RegExp('.*' + "Cargo: "), '')
     let cargoAmount = input[3].replace(new RegExp('.*' + "Amount: "), '')
     let screenshots = input[4].replace(new RegExp('.*' + "Screenshots: "), '')
-    screenshots = screenshots.replace(new RegExp('\`.*'), '') 
+    screenshots = screenshots.replace(new RegExp('\`.*'), '')
     // Screenshots will have left over stuff from the report format
 
     db.createEpiniacReport(userID, shipName, cargoName, cargoAmount, screenshots, timestamp)
@@ -24,8 +24,8 @@ module.exports.run = async (msg, args, client, db, id) => {
 
             msg.channel.send(`:white_check_mark: Success. Report added to db with key: ${reportKey}`);
         })
-        //.then(() => msg.channel.send(`:white_check_mark:\nInfo: Sucessfully added to the database.`))
-        //.catch(() => msg.channel.send(`:x:\n ERR: Failed to add to the database. See log for information.`))
+    //.then(() => msg.channel.send(`:white_check_mark:\nInfo: Sucessfully added to the database.`))
+    //.catch(() => msg.channel.send(`:x:\n ERR: Failed to add to the database. See log for information.`))
 }
 
 module.exports.help = {

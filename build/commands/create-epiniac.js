@@ -1,6 +1,6 @@
 import secrets from '../secrets.json'
 
-module.exports.run = async (msg, args, client, db, id) => {
+module.exports.run = async (msg, args, client, db, ID) => {
     if (msg.author.id !== secrets.ownerID) return msg.reply("ERR: This command is locked to bot owner only.")
 
     db.addEpiniac()

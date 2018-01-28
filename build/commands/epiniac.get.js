@@ -10,12 +10,14 @@ process.on('unhandledRejection', (reason, p) => {
 });
 
 const reportTemplate = require("../defaults.json").reportTemplate // Have a guess
+const keyTemplate = require("../defaults.json").keyTemplate // Have a guess
 
 // String-format documentation: https://www.npmjs.com/package/string-format - PIN
 
-module.exports.run = async (msg, args, client, db, id) => {
+module.exports.run = async (msg, args, client, db, ID) => {
     // brigands only plox
-    if (id !== "372846495608602624") return msg.reply("ERR: This command is server restricted.")
+    if (ID !== "372846495608602624") return msg.reply("ERR: This command is server restricted.")
+    const dateFormat = "DD-MM-YY mm:HH"; // format the date how normal people do. (not American)
 
     const formatReport = (res) => {
         const {
@@ -27,7 +29,6 @@ module.exports.run = async (msg, args, client, db, id) => {
             timestamp: time
         } = res;
 
-        const dateFormat = "DD-MM-YY mm:HH"; // format the date how normal people do. (not American)
         const member = msg.guild.members.get(userID); // We need to use the find the user object via id. we can't backtrack.
 
         return format(reportTemplate, member ? member.user.tag : userID, shipName, cargoName, cargoAmount, screenshots,
@@ -35,6 +36,15 @@ module.exports.run = async (msg, args, client, db, id) => {
         // I cannot explain this in a few words. For information look at documentation at the top.
         // Links to reportTemplate is in defaults.json
     };
+
+    const formatKey = (res) => {
+        const {
+            id: key,
+            timestamp: time
+        } = res
+        
+        return format(keyTemplate, key, moment(time).format(dateFormat));
+    }
 
     const dbERR = (err) => { // stupid way of saying if(err) throw (err)
         winston.error(err)
@@ -78,17 +88,68 @@ module.exports.run = async (msg, args, client, db, id) => {
             .catch(dbERR)
     }
 
-    /* if (args[0] == "list") {
-         if (args[1] == "id") {
+    if (args[0] == "list") {
+        if (!args[1]) return msg.reply("ERR: User didn't specify a search term.")
+        if (args[1] == "id") {
+            if (!args[2]) { // Default to the senders information.
+                db.getEpiniacReportByID(msg.author.id)
+                    .then((res) => {
+                        if (res) {
+                            sendArray(res.map(formatKey), msg.channel);
+                        }
+                        if (!res) {
+                            msg.channel.send("ERR Cannot find any reports matching your search criteria.")
+                        }
+                    })
+                    .catch(dbERR)
+            }
+            if (args[2]) {
+                db.getEpiniacReportByID(args[2])
+                    .then((res) => {
+                        if (res) {
+                            sendArray(res.map(formatKey), msg.channel);
+                        }
+                        if (!res) {
+                            msg.channel.send("ERR Cannot find any reports matching your search criteria.")
+                        }
+                    })
+                    .catch(dbERR)
+            }
+        }
 
-         }
-         if (args[1] == "ship") {
-
-         }
-         if (args[1] == "cargo") {
-
-         }
-     }*/
+        if (args[1] == "ship") {
+            if (!args[2]) return msg.reply("ERR: User didn't specify a ship name.")
+            if (args[2]) {
+                db.getEpiniacReportByShip(args[2])
+                    .then((res) => {
+                        if (res) {
+                            sendArray(res.map(formatKey), msg.channel);
+                        }
+                        if (!res) {
+                            msg.channel.send("ERR Cannot find any reports matching your search criteria.")
+                        }
+                    })
+                    .catch(dbERR)
+            }
+        }
+        if (args[1] == "cargo") {
+            if (!args[2]) return msg.reply("ERR: User didn't specify a cargo type.")
+            if (args[2]) {
+                db.getEpiniacReportByCargo(args[2])
+                    .then((res) => {
+                        if (res) {
+                            sendArray(res.map(formatKey), msg.channel);
+                        }
+                        if (!res) {
+                            msg.channel.send("ERR Cannot find any reports matching your search criteria.")
+                        }
+                    })
+                    .catch(dbERR)
+            }
+        }
+    } else {
+        msg.reply("ERR: User provided incorrect search term.")
+    }
 }
 
 module.exports.help = {

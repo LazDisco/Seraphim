@@ -57,6 +57,18 @@ module.exports = class { // This is used when we create a new instance in index.
         }).run();
     }
 
+    getEpiniacReportByID(userID) {
+        return this.r.table('epiniac').filter({ reporter: userID }).pluck('id', 'timestamp').run()
+    }
+
+    getEpiniacReportByCargo(userID) {
+        return this.r.table('epiniac').filter({ cargo: userID }).pluck('id', 'timestamp').coerceTo('array').run()
+    }
+
+    getEpiniacReportByShip(userID) {
+        return this.r.table('epiniac').filter({ ship: userID }).pluck('id', 'timestamp').run()
+    }
+
     // Count number of reports made to epiniac
     countEpiniacReports() {
         return this.r.table('epiniac').count().run();

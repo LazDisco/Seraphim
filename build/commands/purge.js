@@ -1,4 +1,4 @@
-module.exports.run = async (msg, args, client, db, id) => {
+module.exports.run = async (msg, args, client, db, ID) => {
 
     const user = msg.mentions.users.first();
     const amount = !!parseInt(msg.content.split(' ')[1]) ? parseInt(msg.content.split(' ')[1]) : parseInt(msg.content.split(' ')[2])

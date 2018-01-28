@@ -1,19 +1,15 @@
-module.exports.run = async (msg, args, client, db, id) => {
-    let newPrefix = args[0];
+module.exports.run = async (msg, args, client, db, ID) => {
+    let newPrefix = args[0]; // What the new prefix is going to be
 
-    if (newPrefix.length >= 3) {
+    if (newPrefix.length >= 3) { // Make sue it's not more than 2 characters
         return msg.reply("ERR: Prefix cannot be set to greater than 2 characters and cannot use non-standard special characters.")
     }
 
-    msg.channel.send(`Info: Prefix has been changed to \`${newPrefix}\``)
+    msg.channel.send(`Info: Prefix has been changed to \`${newPrefix}\``) // Tell them what it is now
 
-    db.setGuildPrefix(id, newPrefix)
+    db.setGuildPrefix(ID, newPrefix) // Update the DB with the right information
         .then(() => winston.info(`Prefix: ${id} has changed their prefix to ${newPrefix}`))
         .catch(winston.error)
-
-
-
-
 }
 
 module.exports.help = {

@@ -1,9 +1,9 @@
 import winston from 'winston' // Winston for Logging
 
-module.exports.run = async (msg, args, client, db, id) => {
+module.exports.run = async (msg, args, client, db, ID) => {
 
     // brigands only plox
-    if (id !== "372846495608602624") return msg.reply("ERR: This command is server restricted.")
+    if (ID !== "372846495608602624") return msg.reply("ERR: This command is server restricted.")
 
     let input = msg.content.split(/\n+/g) // Our data
     let userID = msg.author.id; // ID of peson posting report
@@ -24,6 +24,7 @@ module.exports.run = async (msg, args, client, db, id) => {
 
             msg.channel.send(`:white_check_mark: Success. Report added to db with key: ${reportKey}`);
         })
+        .catch((err) => winston.error(err))
     //.then(() => msg.channel.send(`:white_check_mark:\nInfo: Sucessfully added to the database.`))
     //.catch(() => msg.channel.send(`:x:\n ERR: Failed to add to the database. See log for information.`))
 }

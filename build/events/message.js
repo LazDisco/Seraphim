@@ -10,11 +10,11 @@ import fs from 'fs'; // Import FS for command handler.
 module.exports = (msg, db) => {
     // search everything inside guildConfig until you find the current server ID.
 
-    let id = msg.guild.id;
+    let ID = msg.guild.id;
 
     var prefix = "|" // If for some reason the Guild doesn't have a default function.
     // Get Guild Prefix for the guild
-    db.r.table('guilds').get(id).getField('prefix').run(function(err, result) {
+    db.r.table('guilds').get(ID).getField('prefix').run(function(err, result) {
         if (err) throw err; // Was there an issue with the DB?
         prefix = result // Update prefix 
 
@@ -46,14 +46,15 @@ module.exports = (msg, db) => {
                     code: "xl"
                 });
             } catch (err) {
-                msg.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``); // Credit to "An Idiot's Guide" for this code
+                msg.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``); 
+                // Credit to "An Idiot's Guide" for this code - No I don't really understand it all.
             }
         }
 
         if (!command.startsWith(prefix)) return; // Unless a message has the prefix at the start of it, ignore it.
 
         let cmd = client.commands.get(command.slice(prefix.length))
-        if (cmd) cmd.run(msg, args, client, db, id) // Send our command to the handler if none of the commands are listed here
+        if (cmd) cmd.run(msg, args, client, db, ID) // Send our command to the handler if none of the commands are listed here
     })
 
 

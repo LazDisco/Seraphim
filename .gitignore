@@ -1,0 +1,5 @@
+rethinkdb.exe
+./build/secrets.json
+./build/cmd
+./.vscode
+./node_modules

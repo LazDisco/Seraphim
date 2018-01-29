@@ -36,13 +36,16 @@ fs.readdir("./build/commands/", (err, files) => { // Scan that folder for our co
     })
 })
 
-process.on('unhandledRejection', (reason, p) => {
-    winston.debug('Unhandled Rejection at: Promise', p, 'reason:', reason);
-    // We want to log what happens when we have an unhandled Promise.
-});
-
 client.on('ready', () => {
-    winston.info("Bot is ready.\n")
+    winston.info("Bot is ready.\n") // New line to show when things are finally 100% ready.
+    client.user.setPresence({
+        status: 'idle', // Yellow?
+        afk: true, // I have no idea what this does, I just want to see.
+        game: {
+            name: "Remy's screams!", // I mean, how could I not make this joke?
+            type: "LISTENING" // Poor Remy.
+        }
+    })
     // Lets get this shit started
 });
 

@@ -17,7 +17,8 @@ const keyTemplate = require("../defaults.json").keyTemplate // Have a guess
 module.exports.run = async (msg, args, client, db, ID) => {
     // brigands only plox
     if (ID !== "356491798228631552") return msg.reply("ERR: This command is server restricted.")
-    const dateFormat = "DD-MM-YY mm:HH"; // format the date how normal people do. (not American)
+    const dateFormat = "DD-MM-YY HH:mm Z"; // format the date how normal people do. (not American)
+    var validArgs = false;
 
     const formatReport = (res) => {
         const {
@@ -52,6 +53,7 @@ module.exports.run = async (msg, args, client, db, ID) => {
     }
 
     if (args[0] == "recent") {
+        validArgs = true;
         // Make sure that the value they provide is a valid int (no decimal or words etc)
         if (args[1].isInteger == false) return msg.reply("ERR: User did not specify a valid int value.")
         if (args[1] > 10) return msg.reply("ERR: User did not keep value between 1-10.") // obv
@@ -64,6 +66,7 @@ module.exports.run = async (msg, args, client, db, ID) => {
     }
     // Count overall reports in the database
     if (args[0] == "count") {
+        validArgs = true;
         db.countEpiniacReports()
             .then((count) => msg.channel.send(`The Epiniac Datahub currently has a total of ${count} shipping reports.`))
             .catch(dbERR) // If there is an error, log it and move on.
@@ -71,12 +74,14 @@ module.exports.run = async (msg, args, client, db, ID) => {
 
     // Count reports from specific person
     if (args[0] == "count.id") {
+        validArgs = true;
         db.countEpiniacIndividualReports(args[1]) // Count reports of ID given
             .then((count) => msg.channel.send(`The Epiniac Datahub currently has a total of ${count} shipping reports submitted by ${msg.author.username}`))
             .catch(dbERR) // If there is an error, log it and move on.
     }
     // Get report by specific ID
     if (args[0] == "get") {
+        validArgs = true;
         db.getEpiniacReport(args[1]) // Get report by it's primary key
             .then((res) => {
                 if (res) {
@@ -89,6 +94,7 @@ module.exports.run = async (msg, args, client, db, ID) => {
     }
 
     if (args[0] == "list") {
+        validArgs = true;
         if (!args[1]) return msg.reply("ERR: User didn't specify a search term.")
         if (args[1] == "id") { // We want to search via ID
             if (!args[2]) { // Default to the senders information.
@@ -118,6 +124,7 @@ module.exports.run = async (msg, args, client, db, ID) => {
         }
 
         if (args[1] == "ship") { // We want to search for ships
+            
             if (!args[2]) return msg.reply("ERR: User didn't specify a ship name.")
             if (args[2]) {
                 db.getEpiniacReportByShip(args[2]) // Find ships matching value we give it
@@ -147,7 +154,7 @@ module.exports.run = async (msg, args, client, db, ID) => {
                     .catch(dbERR) // If there is an error, log it and move on.
             }
         }
-    } else {
+    } else if (validArgs == false) {
         msg.reply("ERR: User provided incorrect search term.")
     }
 }

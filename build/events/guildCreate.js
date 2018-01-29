@@ -1,5 +1,4 @@
 import winston from 'winston';
-import defaults from "../defaults.json"
 
 
 module.exports = (guild, db) => {
@@ -8,5 +7,7 @@ module.exports = (guild, db) => {
     db.createGuild(guild.id)
         .then(() => winston.info(`Guild: ${guild.id} added to the db.`))
         .catch(winston.error)
+
+        // I honestly thought that this file would be a lot bigger.
 
 }

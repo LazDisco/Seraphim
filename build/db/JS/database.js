@@ -1,9 +1,10 @@
 import rethink from 'rethinkdbdash'; // Import the rethinkdb dash driver
 import Promise from 'bluebird'; // Our promises package
 import winston from 'winston'; // Time to log shit
+import defaults from '../../defaults.json'
 
-let defaultPrefix = "|" 
-let defaultPlayerlistChannel = "playerlist"
+let defaultPrefix = defaults.defaultPrefix 
+let defaultPlayerlistChannel = defaults.defaultPlayerlistChannel 
 
 module.exports = class { // This is used when we create a new instance in index.js
     constructor() {
@@ -31,8 +32,6 @@ module.exports = class { // This is used when we create a new instance in index.
     createGuild(id) {
         return this.r.table('guilds').insert({
             id,
-            log_channel_id: null,
-            mod_role_id: null,
             prefix: defaultPrefix,
             playerlistChannel: defaultPlayerlistChannel
         }).run();

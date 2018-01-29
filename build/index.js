@@ -5,7 +5,6 @@ import fs from 'fs' // Import FS for command handler
 
 import Database from './db/JS/database.js' // Where our db files are located
 import secrets from './secrets' // Private info
-import defaults from './defaults' // Default information called by the db
 
 const events = requireDir('./events')
 // We are going to use seperate files for the really long events to keep things clean

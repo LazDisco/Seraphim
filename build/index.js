@@ -2,9 +2,17 @@ import Discord from 'discord.js' // The one the only D.JS
 import winston from 'winston' // Our logging module
 import requireDir from 'require-dir' // We need this for our event handler
 import fs from 'fs' // Import FS for command handler
+import Disco from 'discoverygc' // Corile's discovery API module
 
 import Database from './db/JS/database.js' // Where our db files are located
 import secrets from './secrets' // Private info
+import { playerlist } from "./processes/playerlist.js";
+
+const options = {
+    key: secrets.apiKey, // My API Key
+}
+
+export const disco = new Disco(options)
 
 const events = requireDir('./events')
 // We are going to use seperate files for the really long events to keep things clean
@@ -15,7 +23,7 @@ client.login(secrets.token) // Login to Discord - Connect code to bot
 client.commands = new Discord.Collection(); // Our command collections, D.JS <3
 // DB Stuff
 
-const db = new Database(); // Create a new database instance
+export const db = new Database(); // Create a new database instance
 db.init() // Initialise it so it can be used
 
 fs.readdir("./build/commands/", (err, files) => { // Scan that folder for our commands
@@ -45,6 +53,7 @@ client.on('ready', () => {
             type: "LISTENING" // Poor Remy.
         }
     })
+    playerlist()
     // Lets get this shit started
 });
 

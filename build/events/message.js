@@ -1,16 +1,17 @@
-import winston from 'winston'; // Winston for logging
 import { commands } from "../index.js"; // Import commands because I made a mistake!
 import { client } from "../index.js"; // Wow. I am starting to see how this could be more efficent.
 import { secrets } from "../index.js"; // Ok I fucked up. Move along.
-import Discord from 'discord.js'; // Turns out I am going to need this. Sue me.
+import { playerlist } from "../processes/playerlist.js"; // You know it boyo
 
+import Discord from 'discord.js'; // Turns out I am going to need this. Sue me.
+import winston from 'winston'; // Winston for logging
 import fs from 'fs'; // Import FS for command handler.
 
 
 module.exports = (msg, db) => {
     // search everything inside guildConfig until you find the current server ID.
 
-    let ID = msg.guild.id;
+    const ID = msg.guild.id;
 
     var prefix = "|" // If for some reason the Guild doesn't have a default function.
     // Get Guild Prefix for the guild
@@ -72,7 +73,6 @@ module.exports = (msg, db) => {
                 // Credit to "An Idiot's Guide" for this code - No I don't really understand it all.
             }
         }
-
         if (!command.startsWith(prefix)) return; // Unless a message has the prefix at the start of it, ignore it.
 
         let cmd = client.commands.get(command.slice(prefix.length))

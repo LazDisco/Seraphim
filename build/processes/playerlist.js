@@ -75,9 +75,9 @@ The playerlist is currently above max capicity, and thus one or more sections ha
         .setDescription(`Current Playercount: ${playersOnline}`)
         .setColor('#663399') // Royal Purple - Brigand colour
         .setTimestamp(time) // What time is it?
-        .addField("Player:", players, true) // All the player names
-        .addField("System:", systems, true) // Mapped against their systems
-        .addField("Region:", regions, true) // Mapped against the system's regions
+        .addField("Player list:", "Player:\n" + players, true) // All the player names
+        .addField("System list:", "System:\n" + systems, true) // Mapped against their systems
+        .addField("Region list:", "Region:\n" + regions, true) // Mapped against the system's regions
         .addField("Playerlist status:", playerlistStatus, true)
     return embed
 }

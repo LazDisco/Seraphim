@@ -18,3 +18,5 @@ rethinkdb.exe
 settings.json
 secrets.json
 package-lock.json
+build/output.log
+build/err.log

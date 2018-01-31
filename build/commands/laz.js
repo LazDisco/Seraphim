@@ -1,6 +1,15 @@
 import Discord from 'discord.js'
 import winston from 'winston'
 
+const images = require('../images.json')
+
+let depression = images.depression;
+//Open a function using the var sombraquotes that we can call later
+function depression() {
+    //Return, aka post, sombraquotes after picking one at random.
+    return depression[Math.floor(Math.random() * depression.length)];
+}
+
 module.exports.run = async (msg, args, client, db, ID) => {
 
     if (args[0] == "finger") {
@@ -48,7 +57,15 @@ module.exports.run = async (msg, args, client, db, ID) => {
             .setImage('https://i.imgur.com/C8c9q2U.jpg') // Our image
         msg.channel.send(embed)
         msg.delete() // No one will know who sent it now
+    }
 
+    if (args[0] == "depression") {
+        var embed = new Discord.RichEmbed()
+            .setTitle('Me right now:') // : {
+            .setColor('#663399') // Brigand Royal Purple
+            .setImage(depression()) // Our image
+        msg.channel.send(embed)
+        msg.delete() // No one will know who sent it now
     }
 
 }

@@ -4,11 +4,6 @@ import moment from 'moment'; // Our timestamp is a string of numbers, lets fix t
 import winston from 'winston'; // Turns out I wasn't getting any errors because I forgot to import winston.
 // What a waste of 3 hours. Kill me. Just Monika Just Monika Just Monika Just Monika Just Monika Just Monika Just Monika
 
-process.on('unhandledRejection', (reason, p) => {
-    winston.debug('Unhandled Rejection at: Promise', p, 'reason:', reason);
-    // We want to log what happens when we have an unhandled Promise.
-});
-
 const reportTemplate = require("../defaults.json").reportTemplate // Have a guess
 const keyTemplate = require("../defaults.json").keyTemplate // Have a guess
 
@@ -16,7 +11,9 @@ const keyTemplate = require("../defaults.json").keyTemplate // Have a guess
 
 module.exports.run = async (msg, args, client, db, ID) => {
     // brigands only plox
-    if (ID !== "356491798228631552") return msg.reply("ERR: This command is server restricted.")
+    //if (ID !== "356491798228631552") return msg.reply("ERR: This command is server restricted.")
+    // Test: Let people access db commands, but not make new entries
+
     const dateFormat = "DD-MM-YY HH:mm Z"; // format the date how normal people do. (not American)
     var validArgs = false;
 

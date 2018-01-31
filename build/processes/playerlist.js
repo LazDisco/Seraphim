@@ -22,34 +22,36 @@ export async function getFactions() {
 
 async function formatPlayerlist(obj) {
 
-    let playersOnline = obj.players.length;
+    let playersOnline = obj.players.length; // How many players online
 
     const playerSort = obj.players.sort((a, b) => {
-        if (a.region === b.region) {
-            if (a.system === b.system) {
-                return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0;
+        if (a.region === b.region) { // Sort by the region
+            if (a.system === b.system) { // If during that sort two systems are the same
+                return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0; // Sort them by name after that.
             } else {
-                return (a.system < b.system) ? -1 : 1;
+                return (a.system < b.system) ? -1 : 1; // Otherwise sort them by sysyem
             }
         } else {
-            return (a.region < b.region) ? -1 : 1;
-        }
-    })
+            return (a.region < b.region) ? -1 : 1; // Then sort them by region
+        } 
+    }) // Simple terms: sort by region until conflict
+        // when conflict sort by system until conflict
+        // If the names then conflict, sort by names.
 
-    let players = playerSort.reduce((accumulator, player) => {
+    let players = playerSort.reduce((accumulator, player) => { // We only want the player names for this side
         return accumulator + `${player.name}\n`
     }, '')
 
-    let systems = playerSort.reduce((accumulator, player) => {
+    let systems = playerSort.reduce((accumulator, player) => { // We only want the player systems for this side
         return accumulator + `${player.system}\n`
     }, '')
 
-    let regions = playerSort.reduce((accumulator, player) => {
+    let regions = playerSort.reduce((accumulator, player) => { // We only want the player regions for this side
         return accumulator + `${player.region}\n`
     }, '')
 
     var time = new Date()
-    const dateFormat = "DD-MM-YY HH:mm"; // format the date how normal people do. (not American)
+    const dateFormat = "DD/MM/YY HH:mm"; // format the date how normal people do. (not American)
 
     var playerlistStatus = `
 The playerlist is currently below maximum capacity. If the count gets too high, the list will shut down the regions section until it is back within the correct range. If It is still too high, the playerlist will go down until things return to a normal level.`
@@ -58,7 +60,7 @@ The playerlist is currently below maximum capacity. If the count gets too high, 
         systems = "\u200B" // this will make sure it doesn't break due to Discord's limits.
     }
     if (regions.length >= 1024) {
-        regions = "\u200B"
+        regions = "\u200B" // This is a pretty much a no width space
     }
     if (players.length >= 1024) { // total shut down
         players = "\u200B"
@@ -78,7 +80,7 @@ The playerlist is currently above max capicity, and thus one or more sections ha
         .addField("Player list:", "Player:\n" + players, true) // All the player names
         .addField("System list:", "System:\n" + systems, true) // Mapped against their systems
         .addField("Region list:", "Region:\n" + regions, true) // Mapped against the system's regions
-        .addField("Playerlist status:", playerlistStatus, true)
+        .addField("Playerlist status:", playerlistStatus, true) // So people don't complain when the list disappears.
     return embed
 }
 
@@ -90,7 +92,7 @@ export function playerlist() {
     updatePlayerlist()
 
     async function updatePlayerlist() {
-        let playerlist = await getPlayers();
+        let playerlist = await getPlayers(); // Make sure we get the current players before proceading.
 
         client.guilds.map(async (guild) => { // Search through all the guilds
             db.r.table('guilds').get(guild.id).getField('playerlistChannel').run(async function(err, result) {

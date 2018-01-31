@@ -24,9 +24,10 @@ module.exports.run = async (msg, args, client, db, ID) => {
 
             msg.channel.send(`:white_check_mark: Success. Report added to db with key: ${reportKey}`);
         })
-        .catch((err) => winston.error(err))
-    //.then(() => msg.channel.send(`:white_check_mark:\nInfo: Sucessfully added to the database.`))
-    //.catch(() => msg.channel.send(`:x:\n ERR: Failed to add to the database. See log for information.`))
+        .catch((err) => {
+            msg.channel.send(`:x:\n ERR: Failed to add to the database. See log for information.`)
+            winston.error(err)
+        })
 }
 
 module.exports.help = {

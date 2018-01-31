@@ -1,4 +1,8 @@
 module.exports.run = async (msg, args, client, db, ID) => {
+    let sender = msg.member;
+    if (!sender.hasPermission('MANAGE_GUILD')) return msg.reply("ERR: User doesn't have valid permissions to use this command")
+    // Make sure that they have the right permissions before using the command.
+
     let newPrefix = args[0]; // What the new prefix is going to be
 
     if (newPrefix.length >= 3) { // Make sue it's not more than 2 characters

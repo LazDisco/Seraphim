@@ -1,11 +1,12 @@
 import { commands } from "../index.js"; // Import commands because I made a mistake!
 import { client } from "../index.js"; // Wow. I am starting to see how this could be more efficent.
-import { secrets } from "../index.js"; // Ok I fucked up. Move along.
 import { playerlist } from "../processes/playerlist.js"; // You know it boyo
 
 import Discord from 'discord.js'; // Turns out I am going to need this. Sue me.
 import winston from 'winston'; // Winston for logging
 import fs from 'fs'; // Import FS for command handler.
+import secrets from "../secrets.json"; // suprsekrt documents
+
 
 
 module.exports = (msg, db) => {
@@ -20,8 +21,7 @@ module.exports = (msg, db) => {
         prefix = result // Update prefix 
 
         if (msg.author.bot) return; // Don't allow bot users
-        if (msg.channel.type === "dm") return msg.reply(`Sorru, this bot is server only!\n Feel free to add it with this:\n <${secrets.inviteCode}>`); // Ignore DM channels.
-        if (msg.channel.type !== "text") return; // Prevent Magic
+        if (msg.channel.type !== "text") return msg.reply(`Sorru, this bot is server only!\n Feel free to add it with this:\n <${secrets.inviteCode}>`); // Ignore DM channels.
 
         /*
             This little area is for reaction texts, should I choose to use them.

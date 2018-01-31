@@ -7,6 +7,7 @@ import Disco from 'discoverygc' // Corile's discovery API module
 import Database from './db/JS/database.js' // Where our db files are located
 import secrets from './secrets' // Private info
 import { playerlist } from "./processes/playerlist.js";
+import { watchlist } from "./processes/watchlist.js";
 
 const options = {
     key: secrets.apiKey, // My API Key
@@ -54,6 +55,7 @@ client.on('ready', () => {
         }
     })
     playerlist()
+    watchlist()
     // Lets get this shit started
 });
 

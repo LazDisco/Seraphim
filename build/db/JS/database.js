@@ -24,6 +24,9 @@ module.exports = class { // This is used when we create a new instance in index.
         return this.r.tableCreate('guilds').run() // Create table for each guild, this will handle our customisation.
             .then(() => winston.info("Guild table created.")) // If it works
             .catch(() => winston.warn("Guild table already exists.")) // If it already exists.
+            .finally(() => this.r.tableCreate('playerlist').run()) // Create a table just for playerlist.
+            .then(() => winston.info("Playerlist table created successfully.")) // It worked
+            .catch(() => winston.warn("Playerlist table already exists.")) // We already have one.
     }
 
     // DB Functions - Mostly taken from TCQB, little bit custom.
@@ -37,7 +40,7 @@ module.exports = class { // This is used when we create a new instance in index.
         }).run();
     }
 
-    // Create table for Epiniac - alt use, add to .finally(() => of init()
+    // Create table for Epiniac - alt use, add to .finally(() => of init() (or a .then(() => )  )
     addEpiniac() {
         return this.r.tableCreate('epiniac').run() // Create a table just for PoB supplies
             .then(() => winston.info("Epiniac table created.")) // If it works
@@ -106,5 +109,45 @@ module.exports = class { // This is used when we create a new instance in index.
         return this.r.table('guilds').get(id).update({
             playerlistChannel: newPlayerlistChannel
         }).run();
+    }
+
+    addFactionToWatchList(guild, factionT, factionN) {
+        return this.r.table('playerlist').insert({
+            guildID: guild,
+            factionName: factionN,
+            factionTag: factionT
+        })
+    }
+
+    addShipToWatchList(guild, shipN, reason) {
+        return this.r.table('playerlist').insert({
+            guildID: guild,
+            shipName: shipN,
+            watchlistReason: reason
+        })
+    }
+
+    removeShipFromWatchList(shipN) {
+        return this.r.table('playerlist').filter(this.r.row('shipName').eq(shipN)).delete().run();
+    }
+
+    removeFactionFromWatchList(factionT) {
+        return this.r.table('playerlist').filter(this.r.row('factionTag').eq(factionT)).delete().run();
+    }
+
+    getFactionForWatchlist(id) {
+        return this.r.table('playerlist').filter({ guildID: id }).getField('factionTag').run();
+    }
+
+    getShipForWatchlist(id) {
+        return this.r.table('playerlist').filter({ guildID: id }).getField('shipName').run();
+    }
+
+    pullFactionWatchlist(id) {
+        return this.r.table('playerlist').filter({ guildID: id }).run()
+    }
+
+    pullIndividualsWatchlist(id) {
+        return this.r.table('playerlist').filter({ guildID: id }).run()
     }
 }

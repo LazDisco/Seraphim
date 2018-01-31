@@ -1,5 +1,5 @@
-import { playerlist } from "./processes/playerlist.js";
-import { watchlist } from "./processes/watchlist.js";
+import { playerlist } from "../processes/playerlist.js";
+import { watchlist } from "../processes/watchlist.js";
 
 module.exports.run = async (msg, args, client, db, ID) => {
     playerlist()

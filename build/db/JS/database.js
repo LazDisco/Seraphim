@@ -1,7 +1,6 @@
 import rethink from 'rethinkdbdash'; // Import the rethinkdb dash driver
 import Promise from 'bluebird'; // Our promises package
 import winston from 'winston'; // Time to log shit
-import defaults from '../../defaults.json'
 
 let defaultPrefix = "|"
 let defaultPlayerlistChannel = "playerlist"

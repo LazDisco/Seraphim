@@ -3,8 +3,8 @@ import Promise from 'bluebird'; // Our promises package
 import winston from 'winston'; // Time to log shit
 import defaults from '../../defaults.json'
 
-let defaultPrefix = defaults.prefix 
-let defaultPlayerlistChannel = defaults.playerlistChannel 
+let defaultPrefix = "|"
+let defaultPlayerlistChannel = "playerlist"
 
 module.exports = class { // This is used when we create a new instance in index.js
     constructor() {

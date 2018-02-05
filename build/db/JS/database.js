@@ -26,9 +26,10 @@ module.exports = class { // This is used when we create a new instance in index.
             .finally(() => this.r.tableCreate('playerlist').run()) // Create a table just for playerlist.
             .then(() => winston.info("Playerlist table created successfully.")) // It worked
             .catch(() => winston.warn("Playerlist table already exists.")) // We already have one.
+            .finally(() => this.r.tableCreate('tags').run()) // You get the idea.
+            .then(() => winston.info("Tags table created.")) // etc etc
+            .catch(() => winston.warn('Tags table already exists.')) // done
     }
-
-    // DB Functions - Mostly taken from TCQB, little bit custom.
 
     // Add Guild to Database - auto called when bot is added. Can be added via command in event of error
     createGuild(id) {
@@ -148,5 +149,31 @@ module.exports = class { // This is used when we create a new instance in index.
 
     pullIndividualsWatchlist(id) {
         return this.r.table('playerlist').filter({ guildID: id }).run()
+    }
+
+    createNewTag(id, tag_name, content) {
+        return this.r.table('tags').insert({
+            guildID: id,
+            tag: tag_name,
+            message: content
+        }).run();
+    }
+
+    getTagData(id, tag_name) {
+        return this.r.table('tags').filter({ guildID: id, tag: tag_name }).pluck('message').run()
+    }
+
+    deleteTag(id, tag_name) {
+        return this.r.table('tags').filter(
+            this.r.row('guildID').eq(id).and(this.r.row('tag').eq(tag_name))
+        ).delete().run();
+    }
+
+    countGuildTags(id) {
+        return this.r.table('tags').filter({ guildID: id }).count().run()
+    }
+
+    listGuildTags(id) {
+        return this.r.table('tags').filter({ guildID: id }).orderBy('tag').pluck('tag').run()
     }
 }

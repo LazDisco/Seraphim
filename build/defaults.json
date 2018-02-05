@@ -3,5 +3,6 @@
     "keyTemplate": "**Report Key:** {0} \n**Report Timestamp:** {1}",
     "factionTemplate": "**Faction Name:** {0} \n**Faction Tag:** {1}",
     "playerTemplate": "**Player Name:** {0} \n**Reason For Tracking:** {1}",
-    "tagTemplate": "**Tag:** {0} \n{1}"
+    "tagTemplate": "**Tag:** {0} \n{1}",
+    "tagListTemplate": "**Tag:** {0}"
 }

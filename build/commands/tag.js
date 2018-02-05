@@ -3,6 +3,7 @@ import sendArray from '../processes/sendArray.js' // We need this to convert our
 import format from 'string-format' // We also need this for that same reason
 
 const tagTemplate = require('../defaults.json').tagTemplate
+const tagListTemplate = require('../defaults.json').tagListTemplate
 
 module.exports.run = async (msg, args, client, db, ID) => {
     let command = args[0] // Makes the code a lot nicer to read.
@@ -18,6 +19,14 @@ module.exports.run = async (msg, args, client, db, ID) => {
         } = res
 
         return format(tagTemplate, tag_name, content);
+    }
+
+    const formatTagList = (res) => {
+        const {
+            tag: tag_name,
+        } = res
+
+        return format(tagListTemplate, tag_name);
     }
 
     if (command == "create") {
@@ -50,6 +59,38 @@ module.exports.run = async (msg, args, client, db, ID) => {
             .catch((err) => {
                 msg.channel.send(`:x:\n ERR: Failed to remove from the database. See log for information.`)
                 winston.error(err)
+            })
+    }
+
+    if (command == "list") {
+        db.listGuildTags(ID)
+            .then((res) => {
+                if (res) {
+                    sendArray(res.map(formatTagList), msg.channel);
+                }
+                if (!res) {
+                    msg.channel.send(`:x: \n ERR: There are no active tags on this server.`)
+                }
+            })
+            .catch((err) => {
+                winston.error(err)
+                msg.channel.send(`:x: Failed. See log for details.`)
+            })
+    }
+
+    if (command == "count") {
+        db.countGuildTags(ID)
+            .then((res) => {
+                if (res) {
+                    msg.channel.send(`There are currently a total of \`${res}\` tags active on this server.`);
+                }
+                if (!res) {
+                    msg.channel.send(`:x: \n ERR: There are no active tags on this server.`)
+                }
+            })
+            .catch((err) => {
+                winston.error(err)
+                msg.channel.send(`:x: Failed. See log for details.`)
             })
     }
 }

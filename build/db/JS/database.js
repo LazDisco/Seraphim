@@ -174,6 +174,6 @@ module.exports = class { // This is used when we create a new instance in index.
     }
 
     listGuildTags(id) {
-        return this.r.table('tags').filter({ guildID: id }).orderBy('tag').pluck('tag').run()
+        return this.r.table('tags').filter({ guildID: id }).orderBy('tag').run()
     }
 }

@@ -11,6 +11,7 @@ module.exports.run = async (msg, args, client, db, ID) => {
     let one = args.shift(); // Take args[1] and make it its own value
     let two = args.shift(); // Take args[2] and amke it its own value
     let three = args.join(' '); // Take everything else, make it its own value.
+    three = three.replace(/#/g, '\n');
 
     const formatTag = (res) => {
         const {
@@ -30,12 +31,14 @@ module.exports.run = async (msg, args, client, db, ID) => {
     }
 
     if (command == "create") {
+        if (two == undefined || three == undefined) return msg.channel.send(`:x: ERR: Tag or Message was undefined.`)
         db.createNewTag(ID, two, three)
             .then(() => msg.channel.send(`Tag: \`${two}\` created successfully. :white_check_mark:`))
             .catch((err) => winston.error(err))
     }
 
     if (command == "get") {
+        if (two == undefined) return msg.channel.send(`:x: ERR: Tag was undefined.`)
         db.getTagData(ID, two)
             .then((res) => {
                 if(res) {
@@ -52,9 +55,10 @@ module.exports.run = async (msg, args, client, db, ID) => {
     }
 
     if (command == "delete") {
+        if (two == undefined) return msg.channel.send(`:x: ERR: Tag was undefined.`)
         db.deleteTag(ID, two)
             .then(() => {
-                msg.channel.send(`:white_check_mark: Success. \`${one}\` has been removed.`);
+                msg.channel.send(`:white_check_mark: Success. \`${two}\` has been removed.`);
             })
             .catch((err) => {
                 msg.channel.send(`:x:\n ERR: Failed to remove from the database. See log for information.`)

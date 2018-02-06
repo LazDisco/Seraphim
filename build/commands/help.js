@@ -61,7 +61,9 @@ ${result}purge 5 @Laz will purge the last five messages from Laz.`)
 ${result}tag delete Test - This will delete the tag Test (note this is case sensitive).
 ${result}tag get Test - This will display the message "Hello this is a test".
 ${result}tag list - This will list all the active tags on this server.
-${result}tag count - This will return the total amount of tags in use on this server (number form).`)
+${result}tag count - This will return the total amount of tags in use on this server (number form).
+
+Note: When creating tags, use # to indicate a line break.`)
         }
 
         if(command == "reload") {

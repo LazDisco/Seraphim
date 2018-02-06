@@ -160,7 +160,7 @@ module.exports = class { // This is used when we create a new instance in index.
     }
 
     getTagData(id, tag_name) {
-        return this.r.table('tags').filter({ guildID: id, tag: tag_name }).pluck('message').run()
+        return this.r.table('tags').filter({ guildID: id, tag: tag_name }).pluck('tag', 'message').run()
     }
 
     deleteTag(id, tag_name) {

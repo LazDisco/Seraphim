@@ -1,6 +1,5 @@
 import { commands } from "../index.js"; // Import commands because I made a mistake!
-import { client } from "../index.js"; // Wow. I am starting to see how this could be more efficent.
-import { playerlist } from "../processes/playerlist.js"; // You know it boyo
+import { client } from "../index.js"; // Wow. I am starting to see how this could be more efficent
 
 import Discord from 'discord.js'; // Turns out I am going to need this. Sue me.
 import winston from 'winston'; // Winston for logging
@@ -27,7 +26,7 @@ module.exports = (msg, db) => {
             This little area is for reaction texts, should I choose to use them.
         */
 
-        const sleepWords = ["sleepy", "tired", "sleep"];
+        /*const sleepWords = ["sleepy", "tired", "sleep"];
         if (sleepWords.some(word => msg.content.includes(word))) {
             var embed = new Discord.RichEmbed()
                 .setColor('#663399')
@@ -39,6 +38,15 @@ module.exports = (msg, db) => {
         const remyWords = ["remy", "Remy"];
         if (remyWords.some(word => msg.content.includes(word))) {
             msg.channel.send("Remy? I hate that guy. Forlorn killed him though.")
+        }*/ // Removed because of stupid dan face
+
+        const danWords = ["DAN THE CUNT"]
+        if (danWords.some(word => msg.content.includes(word))) {
+            var embed = new Discord.RichEmbed()
+                .setColor('#663399')
+                .setImage('http://www.reactiongifs.us/wp-content/uploads/2013/07/ill_kill_you_office.gif');
+            await msg.channel.send(embed);
+            msg.reply("DEATH TO DAN");
         }
 
         /*

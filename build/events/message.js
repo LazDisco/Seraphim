@@ -12,6 +12,8 @@ import secrets from "../secrets.json"; // suprsekrt documents
 module.exports = (msg, db) => {
     // search everything inside guildConfig until you find the current server ID.
 
+    if (msg.channel.type !== "text") return msg.reply(`Sorru, this bot is server only!\n Feel free to add it with this:\n <${secrets.inviteCode}>`); // Ignore DM channels.
+
     const ID = msg.guild.id;
 
     var prefix = "|" // If for some reason the Guild doesn't have a default function.
@@ -21,8 +23,6 @@ module.exports = (msg, db) => {
         prefix = result // Update prefix 
 
         if (msg.author.bot) return; // Don't allow bot users
-        if (msg.channel.type !== "text") return msg.reply(`Sorru, this bot is server only!\n Feel free to add it with this:\n <${secrets.inviteCode}>`); // Ignore DM channels.
-
         /*
             This little area is for reaction texts, should I choose to use them.
         */

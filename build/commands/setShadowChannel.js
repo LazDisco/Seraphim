@@ -8,9 +8,8 @@ module.exports.run = async (msg, args, client, db, ID) => {
     let newChannel = args[0];
     db.setShadowlogChannel(ID, newChannel)
         .then(() => winston.info(`Guild: ${ID} was assigned ${newChannel}.`))
+        .then(() => msg.channel.send(":white_check_mark: noice"))
         .catch(winston.error)
-
-    msg.channel.send(":white_check_mark: noice")
 }
 
 module.exports.help = {

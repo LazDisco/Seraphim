@@ -6,9 +6,8 @@ module.exports.run = async (msg, args, client, db, ID) => {
 
     db.disableShadowlog(ID)
         .then(() => winston.info(`Guild: ${guild.id} was given the 'false' shadowlog flag.`))
+        .then(() => msg.channel.send("Well thats no fun no is it"))
         .catch(winston.error)
-
-    msg.channel.send("Well thats no fun no is it")
 
 }
 

@@ -14,7 +14,7 @@ async function getPlayers() { // Importing this function didn't work for some re
 // See playerlist.js for the actual code that this is taken from
 // There it is all commented and structured.
 
-async function formatWatchlist(obj, guildIDS) {
+async function formatWatchlist(obj, guildIDS, guildObj) {
     let shipsToWatch = await db.getShipForWatchlist(guildIDS);
     let factionsToWatch = await db.getFactionForWatchlist(guildIDS);
     JSON.stringify(shipsToWatch)
@@ -100,6 +100,30 @@ async function formatWatchlist(obj, guildIDS) {
         return accumulator + `${player.region}\n`
     }, '')
 
+    // Logic for calculating whether or not to ping someone
+    // Get ready for callback hell! - I decided this would be quicker. (Bad idea)
+    db.r.table('playerlist').get(ID).getField('enabled').run(async function(err, result) {
+        if (result == "true") {
+            let shadowFactionLength = factionPlayers.split(/\r\n|\r|\n/).length
+            let shadowPlayerLength = players.split(/\r\n|\r|\n/).length
+            let watchLength = shadowFactionLength + shadowPlayerLength;
+
+            if (watchLength > 5) {
+                db.r.table('playerlist').get(ID).getField('rolename').run(async function(err, result) {
+                    if (result == "default") break;
+
+                    var role = guildObj.roles.get('name', result);
+                    db.r.table('playerlist').get(ID).getField('defaultChannel').run(async function(err, result) {
+                        if (result == "default") break;
+                        var defaultChannel = guildObj.channels.get('name', result);
+                        defaultChannel.send(role.mention() + ` There are ${watchLength} players currently online and being watched!`)
+                    })
+                })
+            }
+        }
+    })
+    
+
     var time = new Date()
     const dateFormat = "DD/MM/YY HH:mm"; // format the date how normal people do. (not American)
 
@@ -129,6 +153,7 @@ export function watchlist() {
 
         client.guilds.map(async (guild) => { // Search through all the guilds
             const guildIDS = guild.id; // Our server ID
+            const guildObj = guild;
 
             const res = guild.channels.find(res => {
                 if (res.name == "watchlist" && res.type == "text") {
@@ -149,7 +174,7 @@ export function watchlist() {
                 } else {
                     try {
                         res.send({ // Send message to the channel
-                            embed: await formatWatchlist(await playerlist, guildIDS) // Send the updated information
+                            embed: await formatWatchlist(await playerlist, guildIDS, guildObj) // Send the updated information
                         }).catch(error => {
                             winston.error(error) // Catch the error and log it
                         })

@@ -151,6 +151,38 @@ module.exports = class { // This is used when we create a new instance in index.
         return this.r.table('playerlist').filter({ guildID: id }).run()
     }
 
+    // Set it to on
+    enableShadowlog(id, role) {
+        return this.r.table('playerlist').get(id).update({
+            enabled: "true",
+            rolename: role
+        }).run();
+    }
+    // Set it to off
+    disableShadowlog(id) {
+        return this.r.table('playerlist').get(id).update({
+            enabled: "false"
+        }).run();
+    }
+
+    setShadowlogChannel(id, channel) {
+        return this.r.table('playerlist').get(id).update({
+            defaultChannel: channel
+        }).run();
+    }
+
+    // Used to restore the default state of false. 
+    // This is for when a server doesn't have this value (for whatever reason).
+    // I also added this to the guild create event
+    restoreShadowlog(id) {
+        return this.r.table('playerlist').insert({
+            guildID: id,
+            enabled: "false",
+            rolename: "default",
+            defaultChannel: "default"
+        }).run();
+    }
+
     createNewTag(id, tag_name, content) {
         return this.r.table('tags').insert({
             guildID: id,

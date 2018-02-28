@@ -14,7 +14,7 @@ Here are some that you can do:`
             .setDescription("Command List:") 
             .addField("Epiniac DB Commands:", `Epiniac\nInfo.epiniac\nCreate-epiniac`, true)
             .addField("Misc Commands:", `Help\nPing\nTag`, true)
-            .addField("Mod Commands:", "Purge\nReload\nPrefix", true)
+            .addField("Mod Commands:", "Purge\nReload\nPrefix\nShadow", true)
             .addField("TBD:", "N/A", true)
 
         if (!command) {
@@ -64,6 +64,12 @@ ${result}tag list - This will list all the active tags on this server.
 ${result}tag count - This will return the total amount of tags in use on this server (number form).
 
 Note: When creating tags, use # to indicate a line break.`)
+        }
+
+        if(command == "shadow") {
+            msg.channel.send(`${result}shadow.enable will set the playerlist shadow tag to true.
+${result}shadow.disable will set the the playerlist shadow tag to false.
+${result}shadow.restore will restore the playerlist shadow tag if it has been deleted (default false).`)
         }
 
         if(command == "reload") {

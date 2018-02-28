@@ -109,11 +109,11 @@ async function formatWatchlist(obj, guildIDS, guildObj) {
             let watchLength = shadowFactionLength + shadowPlayerLength;
 
             if (watchLength > 5) {
-                db.r.table('playerlist').get(guildIDSID).getField('rolename').run(async function(err, result) {
+                db.r.table('playerlist').get(guildIDS).getField('rolename').run(async function(err, result) {
                     if (result == "default") return;
 
                     var role = guildObj.roles.get('name', result);
-                    db.r.table('playerlist').get(ID).getField('defaultChannel').run(async function(err, result) {
+                    db.r.table('playerlist').get(guildIDS).getField('defaultChannel').run(async function(err, result) {
                         if (result == "default") return;
                         var defaultChannel = guildObj.channels.get('name', result);
                         defaultChannel.send(role.mention() + ` There are ${watchLength} players currently online and being watched!`)

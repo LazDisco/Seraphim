@@ -9,8 +9,8 @@ module.exports.run = async (msg, args, client, db, ID) => {
             return msg.channel.send("This command is not required, flag already exists.")
         }
         if (result == undefined) {
-            db.restoreShadowlog(guild.id)
-                .then(() => winston.info(`Guild: ${guild.id} was given the false shadowlog flag.`))
+            db.restoreShadowlog(ID)
+                .then(() => winston.info(`Guild: ${ID} was given the false shadowlog flag.`))
                 .then(() => msg.channel.send("Restore successful. Flag set to false."))
                 .catch(winston.error)
         }

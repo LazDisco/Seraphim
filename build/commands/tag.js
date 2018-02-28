@@ -31,6 +31,7 @@ module.exports.run = async (msg, args, client, db, ID) => {
     }
 
     if (command == "create") {
+        if (msg.author.id !== secrets.ownerID) return msg.reply("ERR: This command has been locked. People have shown that they cannot be trusted. Please use 'tag get' to view existing tags.")
         if (two == undefined || three == undefined) return msg.channel.send(`:x: ERR: Tag or Message was undefined.`)
         db.createNewTag(ID, two, three)
             .then(() => msg.channel.send(`Tag: \`${two}\` created successfully. :white_check_mark:`))
@@ -55,6 +56,7 @@ module.exports.run = async (msg, args, client, db, ID) => {
     }
 
     if (command == "delete") {
+        if (msg.author.id !== secrets.ownerID) return msg.reply("ERR: This command has been locked. People have shown that they cannot be trusted. Please use 'tag get' to view existing tags.")
         if (two == undefined) return msg.channel.send(`:x: ERR: Tag was undefined.`)
         db.deleteTag(ID, two)
             .then(() => {

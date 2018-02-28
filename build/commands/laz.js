@@ -7,7 +7,7 @@ let depression = images.depression;
 let sadness = images.sadness;
 
 function depressionFunction() {
-    return sadness[Math.floor(Math.random() * sadness.length)];
+    return depression[Math.floor(Math.random() * depression.length)];
 }
 
 function sadnessFunction() {

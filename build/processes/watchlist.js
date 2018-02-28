@@ -102,14 +102,14 @@ async function formatWatchlist(obj, guildIDS, guildObj) {
 
     // Logic for calculating whether or not to ping someone
     // Get ready for callback hell! - I decided this would be quicker. (Bad idea)
-    db.r.table('playerlist').get(ID).getField('enabled').run(async function(err, result) {
+    db.r.table('playerlist').get(guildIDS).getField('enabled').run(async function(err, result) {
         if (result == "true") {
             let shadowFactionLength = factionPlayers.split(/\r\n|\r|\n/).length
             let shadowPlayerLength = players.split(/\r\n|\r|\n/).length
             let watchLength = shadowFactionLength + shadowPlayerLength;
 
             if (watchLength > 5) {
-                db.r.table('playerlist').get(ID).getField('rolename').run(async function(err, result) {
+                db.r.table('playerlist').get(guildIDSID).getField('rolename').run(async function(err, result) {
                     if (result == "default") return;
 
                     var role = guildObj.roles.get('name', result);

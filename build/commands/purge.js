@@ -1,3 +1,6 @@
+import winston from 'winston'; // Winston for logging
+import secrets from "../secrets.json"; // suprsekrt documents
+
 module.exports.run = async (msg, args, client, db, ID) => {
     let sender = msg.member;
     if (msg.author.id !== secrets.ownerID || !sender.hasPermission('MANAGE_MESSAGES')) return msg.reply("You may not do this.")    

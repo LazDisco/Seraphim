@@ -1,3 +1,6 @@
+import winston from 'winston'; // Winston for logging
+import secrets from "../secrets.json"; // suprsekrt documents
+
 module.exports.run = async (msg, args, client, db, ID) => {
     if (msg.author.id !== secrets.ownerID) return msg.reply("You are not Laz.")
     if (!args) return msg.channel.send("No args, no roles, no shadows.")

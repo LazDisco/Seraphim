@@ -1,3 +1,6 @@
+import winston from 'winston'; // Winston for logging
+import secrets from "../secrets.json"; // suprsekrt documents
+
 module.exports.run = async (msg, args, client, db, ID) => {
 
     try {

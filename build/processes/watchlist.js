@@ -14,7 +14,7 @@ async function getPlayers() { // Importing this function didn't work for some re
 // See playerlist.js for the actual code that this is taken from
 // There it is all commented and structured.
 
-async function formatWatchlist(obj, guildIDS, guildObj) {
+async function formatWatchlist(obj, guildIDS) {
     let shipsToWatch = await db.getShipForWatchlist(guildIDS);
     let factionsToWatch = await db.getFactionForWatchlist(guildIDS);
     JSON.stringify(shipsToWatch)
@@ -103,22 +103,36 @@ async function formatWatchlist(obj, guildIDS, guildObj) {
     // Logic for calculating whether or not to ping someone
     // Get ready for callback hell! - I decided this would be quicker. (Bad idea)
     db.r.table('playerlist').get(guildIDS).getField('enabled').run(async function(err, result) {
+        if (result == undefined) // Make sure this is never a problem
+        {
+            db.restoreShadowlog(guildIDS)
+                .then(() => winston.info(`Guild: ${guildIDS} was given the false shadowlog flag.`))
+                .catch(winston.error)       
+        }
         if (result == "true") {
             let shadowFactionLength = factionPlayers.split(/\r\n|\r|\n/).length
             let shadowPlayerLength = players.split(/\r\n|\r|\n/).length
-            let watchLength = shadowFactionLength + shadowPlayerLength;
+            
+            let watchLength = shadowFactionLength + shadowPlayerLength - 2; // We always get an extra two due to the headings. We remove that.
+            console.log(watchLength)
 
-            if (watchLength > 5) {
+            if (watchLength > 4) {
                 db.r.table('playerlist').get(guildIDS).getField('rolename').run(async function(err, result) {
-                    if (result == "default") return;
 
-                    var role = guildObj.roles.get('name', result);
+                    if (result == "default") return; // Make sure that a new role is actually set
+                    // We need our guild object!
+                    client.guilds.map(async (guild) => {
+                    var role = guild.roles.find('name', result); // Get the right role to ping
+
                     db.r.table('playerlist').get(guildIDS).getField('defaultChannel').run(async function(err, result) {
-                        if (result == "default") return;
-                        var defaultChannel = guildObj.channels.get('name', result);
-                        defaultChannel.send(role.mention() + ` There are ${watchLength} players currently online and being watched!`)
+
+                        if (result == "default") return; // Make sure a new channel was actually defined
+                        var defaultChannel = guild.channels.find('name', result); // Get the right channel
+                        console.log(result)
+                        defaultChannel.send(role + ` There are ${watchLength} players currently online and being watched!`)
                     })
                 })
+            })
             }
         }
     })
@@ -153,7 +167,6 @@ export function watchlist() {
 
         client.guilds.map(async (guild) => { // Search through all the guilds
             const guildIDS = guild.id; // Our server ID
-            const guildObj = guild;
 
             const res = guild.channels.find(res => {
                 if (res.name == "watchlist" && res.type == "text") {
@@ -174,7 +187,7 @@ export function watchlist() {
                 } else {
                     try {
                         res.send({ // Send message to the channel
-                            embed: await formatWatchlist(await playerlist, guildIDS, guildObj) // Send the updated information
+                            embed: await formatWatchlist(await playerlist, guildIDS) // Send the updated information
                         }).catch(error => {
                             winston.error(error) // Catch the error and log it
                         })

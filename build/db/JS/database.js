@@ -176,7 +176,7 @@ module.exports = class { // This is used when we create a new instance in index.
     // I also added this to the guild create event
     restoreShadowlog(id) {
         return this.r.table('playerlist').insert({
-            guildID: id,
+            id,
             enabled: "false",
             rolename: "default",
             defaultChannel: "default"

@@ -19,7 +19,9 @@ In addition to these, you'll also require the [rethinkdb executable](https://www
 ----------
 ## Setting up:
 
-Once you have node installed, you can get around to setting up the bot. For the bot to work, you'll only need a few main things to be done. Step one would be to go to the site for [Discord](https://discordapp.com/developers/applications/me) and create a bot application. After that is sorted, copy the token to the clipboard.
+Once you have node installed, you can get around to setting up the bot. For the bot to work, you'll only need a few main things to be done. Step 1 would be to go and create a new db entry for the bot to use. By default, it will use the name TBB - but you can change this inside of the code when the bot is initialised.
+
+Step two would be to go to the site for [Discord](https://discordapp.com/developers/applications/me) and create a bot application. After that is sorted, copy the token to the clipboard.
 
 Now, what we are going to want to do is create a new .json file in the build folder of our project. Call it the following:
 

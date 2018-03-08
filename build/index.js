@@ -5,23 +5,12 @@ import fs from 'fs'; // Import FS for command handler
 import Disco from 'discoverygc'; // Corile's discovery API module
 import RSS from 'rss'; // Used for syndication with the myBB Disco Forum
 
-import Database from './db/JS/database.js' // Where our db files are located
-import secrets from './secrets' // Private info
+import Database from './db/JS/database.js'; // Where our db files are located
+import secrets from './settings/secrets.json'; // Private info
+import options from './settings/options.js'; // Where we are storing all our settings 
 
-const options = {
-    key: secrets.apiKey, // My API Key
-}
-const optionsRSS = {
-    title: "Discovery Gaming Community",
-    description: "A live feed of the posts within the Discovery GC Forum.",
-    site_url: "https://discoverygc.com/forums/",
-    feed_url: "https://discoverygc.com/forums/syndication.php?fid=9&limit=15",
-    docs: "https://discoverygc.com/forums/misc.php?action=syndication",
-    webMaster: "@Alex. - https://discoverygc.com/forums/member.php?action=profile&uid=13536"    
-} 
-
-export const feed = new RSS(optionsRSS);
-export const disco = new Disco(options);
+export const feed = new RSS(options.optionsRSS);
+export const disco = new Disco(options.optionsDisco);
 export const client = new Discord.Client() // New client
 
 const events = requireDir('./events');

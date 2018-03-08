@@ -1,7 +1,7 @@
 import Discord from 'discord.js'
 import winston from 'winston'
 
-const images = require('../images.json')
+const images = require('../settings/images.json')
 
 let depression = images.depression;
 let sadness = images.sadness;

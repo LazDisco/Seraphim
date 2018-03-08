@@ -4,7 +4,7 @@ import { client } from "../index.js"; // Wow. I am starting to see how this coul
 import Discord from 'discord.js'; // Turns out I am going to need this. Sue me.
 import winston from 'winston'; // Winston for logging
 import fs from 'fs'; // Import FS for command handler.
-import secrets from "../secrets.json"; // suprsekrt documents
+import secrets from "../settings/secrets.json"; // suprsekrt documents
 
 
 

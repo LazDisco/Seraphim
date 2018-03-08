@@ -1,10 +1,10 @@
 import winston from 'winston'; // Winston for logging
 import sendArray from '../processes/sendArray.js' // We need this to convert our db information
 import format from 'string-format' // We also need this for that same reason
-import secrets from "../secrets.json"; // suprsekrt documents
+import secrets from '../settings/secrets.json'; // suprsekrt documents
 
-const tagTemplate = require('../defaults.json').tagTemplate
-const tagListTemplate = require('../defaults.json').tagListTemplate
+const tagTemplate = require('../settings/defaults.json').tagTemplate
+const tagListTemplate = require('../settings/defaults.json').tagListTemplate
 
 module.exports.run = async (msg, args, client, db, ID) => {
     let command = args[0] // Makes the code a lot nicer to read.

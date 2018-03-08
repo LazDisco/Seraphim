@@ -12,8 +12,6 @@ module.exports = class { // This is used when we create a new instance in index.
         }) // The name of our database | TBB = The Brigand Bot
     }
 
-
-
     // rethinkDBdash documentation - https://github.com/neumino/rethinkdbdash - PIN
     // RethinkDB documentation - https://rethinkdb.com/api/javascript - PIN
     // Kudos to BitQuote for this stuff on TCQB.
@@ -29,6 +27,9 @@ module.exports = class { // This is used when we create a new instance in index.
             .finally(() => this.r.tableCreate('tags').run()) // You get the idea.
             .then(() => winston.info("Tags table created.")) // etc etc
             .catch(() => winston.warn('Tags table already exists.')) // done
+            .finally(() => this.r.tableCreate('RSS').run())
+            .then(() => winston.info("RSS table created."))
+            .catch(() => winston.warn('RSS table already exists.'))
     }
 
     // Add Guild to Database - auto called when bot is added. Can be added via command in event of error

@@ -11,35 +11,6 @@ module.exports.run = async (msg, args, client, db, ID) => {
                 if (guild.id == args[0]) {
                     if (!guild.available) return msg.reply("ERR: Guild is suffering from server outage.");
                     //let invites = guild.fetchInvites()
-                        ///.then(result => {
-                            var embed = new discord.RichEmbed()
-                                .setThumbnail(guild.iconURL)
-                                .setColor('#663399')
-                                .setTimestamp(new Date)
-                                .addField("Name:", guild.name, true)
-                                .addField("ID:", guild.id, true)
-                                .addField("Guild Owner", guild.owner, true)
-                                .addField("Member Count:", guild.memberCount, true)
-                                .addField("Members:", guild.members.map(iter => iter.user + `(${iter.nickname})`), true)
-                                .addField("Channels:", guild.channels.map(iter => iter.name), true)
-                                .addField("Roles", guild.roles.map(iter => iter.name), true)
-                                //.addField("Invite Info:", result.map(iter => `${iter.code} by ${iter.inviter} used ${iter.uses} times - Expire Flag[${iter.temporary}]`), true)
-
-                            msg.channel.send(embed)
-                        //})
-                }
-            })
-        } catch (e) {
-            throw e;
-        }
-    }
-    if(args[0] && args[1])
-    {
-        try {
-            client.guilds.map(guild => {
-                if (guild.id == args[0]) {
-                    if (!guild.available) return msg.reply("ERR: Guild is suffering from server outage.");
-                    //let invites = guild.fetchInvites()
                     ///.then(result => {
                     var embed = new discord.RichEmbed()
                         .setThumbnail(guild.iconURL)
@@ -47,11 +18,39 @@ module.exports.run = async (msg, args, client, db, ID) => {
                         .setTimestamp(new Date)
                         .addField("Name:", guild.name, true)
                         .addField("ID:", guild.id, true)
-                        .addField("Channels:", guild.channels.map(iter => iter.name + '|' + iter.id + '|' + iter.type), true)
+                        .addField("Guild Owner", guild.owner, true)
+                        .addField("Member Count:", guild.memberCount, true)
+                        .addField("Members:", guild.members.map(iter => iter.user + `(${iter.nickname})`), true)
+                        .addField("Channels:", guild.channels.map(iter => iter.name), true)
+                        .addField("Roles", guild.roles.map(iter => iter.name), true)
                     //.addField("Invite Info:", result.map(iter => `${iter.code} by ${iter.inviter} used ${iter.uses} times - Expire Flag[${iter.temporary}]`), true)
 
                     msg.channel.send(embed)
                     //})
+                }
+            })
+        } catch (e) {
+            throw e;
+        }
+    }
+    if (args[0] && args[1]) {
+        try {
+            client.guilds.map(guild => {
+                if (guild.id == args[0]) {
+                    if (!guild.available) return msg.reply("ERR: Guild is suffering from server outage.");
+                    let invites = guild.fetchInvites()
+                        .then(result => {
+                            var embed = new discord.RichEmbed()
+                                .setThumbnail(guild.iconURL)
+                                .setColor('#663399')
+                                .setTimestamp(new Date)
+                                .addField("Name:", guild.name, true)
+                                .addField("ID:", guild.id, true)
+                                .addField("Channels:", guild.channels.map(iter => iter.name + '|' + iter.id + '|' + iter.type), true)
+                                .addField("Invite Info:", result.map(iter => `${iter.code} by ${iter.inviter} used ${iter.uses} times - Expire Flag[${iter.temporary}]`), true)
+
+                            msg.channel.send(embed)
+                        })
                 }
             })
         } catch (e) {

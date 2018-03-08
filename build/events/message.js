@@ -10,7 +10,7 @@ import secrets from "../secrets.json"; // suprsekrt documents
 
 module.exports = (msg, db) => {
     // search everything inside guildConfig until you find the current server ID.
-
+    if (msg.author.bot && msg.channel.type !== "text") return;
     if (msg.channel.type !== "text") return msg.reply(`Sorru, this bot is server only!\n Feel free to add it with this:\n <${secrets.inviteCode}>`); // Ignore DM channels.
 
     const ID = msg.guild.id;
@@ -67,18 +67,13 @@ module.exports = (msg, db) => {
         {
             if (msg.author.id !== secrets.ownerID) return; // Protect our eval function from evil-dooers (Eval-Dooers)
             try {
-                const code = args.join(" "); // The args after the |eval
-                let evaled = eval(code); // Eval it.
+                const r = eval(msg.content.substr(5))
+                msg.channel.send(`Evaled: \n\`\`\`${msg.content.substr(5)}\n\n> ${r}\n\`\`\``)
 
-                if (typeof evaled !== "string")
-                    evaled = require("util").inspect(evaled);
-
-                msg.channel.send(clean(evaled), {
-                    code: "xl"
-                });
-            } catch (err) {
-                msg.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``); 
-                // Credit to "An Idiot's Guide" for this code - No I don't really understand it all.
+                return
+            }
+                catch (err) {
+                msg.channel.send(`${err.name}: ${err.message}`)
             }
         }
         if (!command.startsWith(prefix)) return; // Unless a message has the prefix at the start of it, ignore it.

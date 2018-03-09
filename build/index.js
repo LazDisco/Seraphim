@@ -2,7 +2,6 @@ import Discord from 'discord.js'; // The one the only D.JS
 import winston from 'winston'; // Our logging module
 import requireDir from 'require-dir'; // We need this for our event handler
 import Disco from 'discoverygc'; // Corile's discovery API module
-import RSS from 'rss'; // Used for syndication with the myBB Disco Forum
 import Promise from 'bluebird'; // Our promises package
 
 import Database from './db/JS/database.js'; // Where our db files are located

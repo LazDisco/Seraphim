@@ -48,7 +48,9 @@ module.exports = (msg, db) => {
             await msg.channel.send(embed);
             msg.reply("DEATH TO DAN");
         }
-        const hekiboh = ["heki", "hek", "h e k i", "h e k", "boh", "b o h", "b oh", "bo h", "he ki", "h eki", "hek i"]
+        const hekiboh = ["heki", "hek", "h e k i", "h e k", "boh", "b o h", "b oh",
+            "bo h", "he ki", "h eki", "hek i", "хеки", "хе ки", "х еки", "хек и", "х е к и",
+            "hëki", "h ë k i", "hë ki", "hëk i", "h ëki"]
         if (hekiboh.some(word => msg.content.toLowerCase().includes(word))) {
             msg.delete().catch((err) => winston.error(err))
         }

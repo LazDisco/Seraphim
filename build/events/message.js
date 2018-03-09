@@ -50,7 +50,9 @@ module.exports = (msg, db) => {
         }
         const hekiboh = ["heki", "hek", "h e k i", "h e k", "boh", "b o h", "b oh",
             "bo h", "he ki", "h eki", "hek i", "хеки", "хе ки", "х еки", "хек и", "х е к и",
-            "hëki", "h ë k i", "hë ki", "hëk i", "h ëki"]
+            "hëki", "h ë k i", "hë ki", "hëk i", "h ëki", "h3ki", "h3 ki", "h 3ki", "h3k i", "h3k1",
+            "hecki", "heck i", "hec ki", "he cki", "h ecki", "x e k i", "x eki", "xe ki", "xek i", "xeki",
+            "ηκι", "h3 k1", "h 3 k 1", "h3k 1"]
         if (hekiboh.some(word => msg.content.toLowerCase().includes(word))) {
             msg.delete().catch((err) => winston.error(err))
         }

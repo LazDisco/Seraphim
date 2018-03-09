@@ -1,11 +1,11 @@
-import sendArray from '../processes/sendArray.js' // We need this to convert our db information
+import sendArray from '../../processes/sendArray.js' // We need this to convert our db information
 import format from 'string-format' // We also need this for that same reason
 import moment from 'moment'; // Our timestamp is a string of numbers, lets fix that.
 import winston from 'winston'; // Turns out I wasn't getting any errors because I forgot to import winston.
 // What a waste of 3 hours. Kill me. Just Monika Just Monika Just Monika Just Monika Just Monika Just Monika Just Monika
 
-const reportTemplate = require("../settings/defaults.json").reportTemplate // Have a guess
-const keyTemplate = require("../settings/defaults.json").keyTemplate // Have a guess
+const reportTemplate = require("../../settings/defaults.json").reportTemplate // Have a guess
+const keyTemplate = require("../../settings/defaults.json").keyTemplate // Have a guess
 
 // String-format documentation: https://www.npmjs.com/package/string-format - PIN
 

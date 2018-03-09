@@ -1,9 +1,9 @@
-import sendArray from '../processes/sendArray.js' // We need this to convert our db information
+import sendArray from '../../processes/sendArray.js' // We need this to convert our db information
 import format from 'string-format' // We also need this for that same reason
 import winston from 'winston'; // Turns out I wasn't getting any errors because I forgot to import winston.
 
-const playerTemplate = require('../settings/defaults.json').playerTemplate
-const factionTemplate = require('../settings/defaults.json').factionTemplate
+const playerTemplate = require('../../settings/defaults.json').playerTemplate
+const factionTemplate = require('../../settings/defaults.json').factionTemplate
 
 module.exports.run = async (msg, args, client, db, ID) => {
 

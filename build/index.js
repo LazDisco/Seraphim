@@ -1,18 +1,20 @@
 import Discord from 'discord.js'; // The one the only D.JS
 import winston from 'winston'; // Our logging module
 import requireDir from 'require-dir'; // We need this for our event handler
-import fs from 'fs'; // Import FS for command handler
 import Disco from 'discoverygc'; // Corile's discovery API module
 import RSS from 'rss'; // Used for syndication with the myBB Disco Forum
+import Promise from 'bluebird'; // Our promises package
 
 import Database from './db/JS/database.js'; // Where our db files are located
 import secrets from './settings/secrets.json'; // Private info
-import options from './settings/options.js'; // Where we are storing all our settings 
+import options from './settings/options.js'; // Where we are storing all our settings
+import { fsDir } from './processes/fsReadDirRecursive.js'; // Much Cleaner 
 
 export const feed = new RSS(options.optionsRSS);
 export const disco = new Disco(options.optionsDisco);
 export const client = new Discord.Client() // New client
 
+const commands = requireDir('./commands/', { recurse: true })
 const events = requireDir('./events');
 // We are going to use seperate files for the really long events to keep things clean
 
@@ -23,22 +25,25 @@ client.commands = new Discord.Collection(); // Our command collections, D.JS <3
 export const db = new Database(); // Create a new database instance
 db.init() // Initialise it so it can be used
 
-fs.readdir("./build/commands/", (err, files) => { // Scan that folder for our commands
-    if (err) winston.error(err) // Log my errors senpai.
-
-    let jsfiles = files.filter(f => f.split(".").pop() === "js") // Only pick files that have .js at the end
-    if (jsfiles.length <= 0) {
-        winston.info("ERR: Missing command files.") // There are no command files, or no commands folder.
-        return
-    }
-
-    winston.info(`Loading ${jsfiles.length} commands.`) // How many commands are we loading?
-    jsfiles.forEach((f, i) => { // Lets find out.
-        let props = require(`./commands/${f}`);
-        winston.info(`${i + 1}: ${f} loaded.`)
-        client.commands.set(props.help.name, props) // Setup our commands to be used with module.exports (Kudos Threebow)        
+var files; // Empty var to use to store our files array
+fsDir("./build/commands", files)  // Scan that folder for our commands
+    .then((files) => {
+        // Remove folders, I know it's not pretty, but it's 00:10 right now. I am out of fucks to give.
+        for (var i = files.length - 1; i >= 0; i--) {
+            if (files[i] === "Epiniac" || files[i] === "Misc" || files[i] === "Playerlist" || files[i] === "Moderation") {
+                files.splice(i, 1);
+            } 
+        } 
+        winston.info(`Loading ${files.length} commands.`) // How many commands are we loading?
+        files.forEach((f, i) => { // Lets find out.
+            let props = require(`./${f}`);
+            winston.info(`${i + 1}: ${f} loaded.`)
+            client.commands.set(props.help.name, props) // Setup our commands to be used with module.exports (Kudos Threebow)        
+        })
     })
-})
+    .catch((err) => {
+        winston.error(err) // Log my errors Senpai!
+    })
 
 client.on('ready', () => {
     events.ready(client) // See events/ready.js

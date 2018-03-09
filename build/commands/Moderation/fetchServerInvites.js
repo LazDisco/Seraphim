@@ -1,4 +1,4 @@
-import secrets from '../settings/secrets.json'
+import secrets from '../../settings/secrets.json'
 import discord from 'discord.js'
 
 module.exports.run = async (msg, args, client, db, ID) => {

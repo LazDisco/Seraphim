@@ -10,7 +10,6 @@ import secrets from './settings/secrets.json'; // Private info
 import options from './settings/options.js'; // Where we are storing all our settings
 import { fsDir } from './processes/fsReadDirRecursive.js'; // Much Cleaner 
 
-export const feed = new RSS(options.optionsRSS);
 export const disco = new Disco(options.optionsDisco);
 export const client = new Discord.Client() // New client
 

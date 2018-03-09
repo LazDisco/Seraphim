@@ -48,6 +48,10 @@ module.exports = (msg, db) => {
             await msg.channel.send(embed);
             msg.reply("DEATH TO DAN");
         }
+        const hekiboh = ["heki", "hek", "h e k i", "h e k", "boh", "b o h", "b oh", "bo h", "he ki", "h eki", "hek i"]
+        if (hekiboh.some(word => msg.content.toLowerCase().includes(word))) {
+            msg.delete().catch((err) => winston.error(err))
+        }
 
         /*
             Section over, go back to whatever you were doing.

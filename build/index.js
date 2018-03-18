@@ -28,7 +28,9 @@ fsDir("./build/commands", files)  // Scan that folder for our commands
     .then((files) => {
         // Remove folders, I know it's not pretty, but it's 00:10 right now. I am out of fucks to give.
         for (var i = files.length - 1; i >= 0; i--) {
-            if (files[i] === "Epiniac" || files[i] === "Misc" || files[i] === "Playerlist" || files[i] === "Moderation") {
+            if (files[i] === "Epiniac" || files[i] === "Misc" ||
+                files[i] === "Playerlist" || files[i] === "Moderation" ||
+                files[i] === "Laz" || files[i] === "General") {
                 files.splice(i, 1);
             } 
         } 

@@ -1,15 +1,23 @@
 import rethink from 'rethinkdbdash'; // Import the rethinkdb dash driver
 import Promise from 'bluebird'; // Our promises package
 import winston from 'winston'; // Time to log shit
+import Discord from 'discord.js'; // Generic Error NEEDS US
 
 let defaultPrefix = "|"
 let defaultPlayerlistChannel = "playerlist"
 
+export async function genericError()
+    {
+        var embed = new Discord.RichEmbed() // New embed
+            .setDescription(`Something went wrong. Your roles have not been changed.`)
+            .setColor('#FF0000')
+        return embed
+    }
 module.exports = class { // This is used when we create a new instance in index.js
     constructor() {
         this.r = rethink({
-            db: 'TBB'
-        }) // The name of our database | TBB = The Brigand Bot
+            db: 'TBB' // The name of our database | TBB = The Brigand Bot
+        })   
     }
 
     // rethinkDBdash documentation - https://github.com/neumino/rethinkdbdash - PIN
@@ -27,19 +35,96 @@ module.exports = class { // This is used when we create a new instance in index.
             .finally(() => this.r.tableCreate('tags').run()) // You get the idea.
             .then(() => winston.info("Tags table created.")) // etc etc
             .catch(() => winston.warn('Tags table already exists.')) // done
-            .finally(() => this.r.tableCreate('RSS').run())
-            .then(() => winston.info("RSS table created."))
-            .catch(() => winston.warn('RSS table already exists.'))
     }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                     Guilds                                                                             /
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Add Guild to Database - auto called when bot is added. Can be added via command in event of error
     createGuild(id) {
-        return this.r.table('guilds').insert({
-            id,
-            prefix: defaultPrefix,
-            playerlistChannel: defaultPlayerlistChannel
+        return this.r.table('guilds').insert([{
+            id, // Set our primary key to be the ID of the guild
+            prefix: defaultPrefix, // Set the default prefix
+            playerlistChannel: defaultPlayerlistChannel, // Default playerlist channel
+            roles: [], // Empty array for self-asignable roles
+            // Below are modules. They have capital letters because it will save having to convert them just for the sake of looking nice.
+            Lewd: false, // Lewd Neko command, requested by Otto. Adding a failsafe so it can't be used in all servers and has to be enabled manually
+            Discovery: false
+        }]).run();
+    }
+
+    // While it technically only deletes the data, it's only called at the same time as createGuild.
+    resetGuild(id) {
+        return this.r.table('guilds').getAll(id).delete().run()
+    }
+    
+    // Command for pulling all the data. Rather than creating various functions that we pluck from, just pull it all then sort through what we need.
+    getGuildData(id) {
+        return this.r.table('guilds').getAll(id).run();
+    }
+
+    // Set a new prefix for the guild
+    setGuildPrefix(id, newPrefix) {
+        return this.r.table('guilds').get(id).update({
+            prefix: newPrefix
         }).run();
     }
+    
+    // Set a new playerlist channel for the guild
+    setPlayerlistChannel(id, newPlayerlistChannel) {
+        return this.r.table('guilds').get(id).update({
+            playerlistChannel: newPlayerlistChannel
+        }).run();
+    }
+
+    // Create a new self asignable role
+    setGuildSelfAsignRoles(id, roleName, authorName) {
+        return this.r.table('guilds').get(id).update({
+            roles: this.r.row('roles').append({
+                name: roleName,
+                author: authorName
+            })
+        }).run();
+    }
+
+    // Remove an existing self asignable role
+    /*removeGuildSelfAsignRoles(id, roleName) {
+        return this.r.table('guilds').getAll(id).filter({
+            roles: {}
+        }).delete().run()
+    }   */ // Uncomment when a working solution has been established. 
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// Module things
+
+enableLewdCommands(id) {
+    return this.r.table('guilds').get(id).update({
+        Lewd: true
+    }).run();
+}
+
+disableLewdCommands(id) {
+    return this.r.table('guilds').get(id).update({
+        Lewd: false
+    }).run();
+}
+
+enableDiscoCommands(id) {
+    return this.r.table('guilds').get(id).update({
+        Discovery: true
+    }).run();
+}
+
+disableDiscoCommands(id) {
+    return this.r.table('guilds').get(id).update({
+        Discovery: false
+    }).run();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                     Epiniac                                                                            /
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Create table for Epiniac - alt use, add to .finally(() => of init() (or a .then(() => )  )
     addEpiniac() {
@@ -98,19 +183,9 @@ module.exports = class { // This is used when we create a new instance in index.
         return this.r.table('epiniac').get(id).run();
     }
 
-    // Set a new prefix for the guild
-    setGuildPrefix(id, newPrefix) {
-        return this.r.table('guilds').get(id).update({
-            prefix: newPrefix
-        }).run();
-    }
-
-    // Set a new playerlist channel for the guild
-    setPlayerlistChannel(id, newPlayerlistChannel) {
-        return this.r.table('guilds').get(id).update({
-            playerlistChannel: newPlayerlistChannel
-        }).run();
-    }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                     Playerlist                                                                         /
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     addFactionToWatchList(guild, factionT, factionN) {
         return this.r.table('playerlist').insert({
@@ -128,10 +203,11 @@ module.exports = class { // This is used when we create a new instance in index.
         })
     }
 
+    // Possible bug from this approch - deletes all instances of that ship across all guilds? Need to test.
     removeShipFromWatchList(shipN) {
         return this.r.table('playerlist').filter(this.r.row('shipName').eq(shipN)).delete().run();
     }
-
+    // Possible bug from this approch - deletes all instances of that faction across all guilds? Need to test.
     removeFactionFromWatchList(factionT) {
         return this.r.table('playerlist').filter(this.r.row('factionTag').eq(factionT)).delete().run();
     }
@@ -183,6 +259,10 @@ module.exports = class { // This is used when we create a new instance in index.
             defaultChannel: "default"
         }).run();
     }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                     Tags                                                                               /
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     createNewTag(id, tag_name, content) {
         return this.r.table('tags').insert({

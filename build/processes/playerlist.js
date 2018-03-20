@@ -5,6 +5,8 @@ import moment from 'moment' // To format our unix timestamp
 import { disco } from '../index.js'; // disco for API
 import { db } from "../index.js"; // Our db to read data
 import { client } from "../index.js" // import client?????
+import { dbERR } from "./statusReport.js";
+import { statusReport } from "./statusReport.js";
 
 async function getPlayers() {
     let players = await disco.players();
@@ -92,11 +94,17 @@ export function playerlist() {
     updatePlayerlist()
 
     async function updatePlayerlist() {
+
+        
+
         let playerlist = await getPlayers(); // Make sure we get the current players before proceading.
 
         client.guilds.map(async (guild) => { // Search through all the guilds
+
             db.r.table('guilds').get(guild.id).getField('playerlistChannel').run(async function(err, result) {
                 const guildIDS = guild.id; // Our server ID
+                let report = statusReport(guildIDS)
+                if(report.discovery == false) return; // Do they have the module activated?
 
                 const res = guild.channels.find(res => {
                     if (res.name == result && res.type == "text") {

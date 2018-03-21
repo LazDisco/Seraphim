@@ -9,7 +9,7 @@ let defaultPlayerlistChannel = "playerlist"
 export async function genericError()
     {
         var embed = new Discord.RichEmbed() // New embed
-            .setDescription(`Something went wrong. Your roles have not been changed.`)
+            .setDescription(`Something went wrong. See log file for details.`)
             .setColor('#FF0000')
         return embed
     }

@@ -1,6 +1,5 @@
 import ini from 'ini'; // I want to see how useful this ini parser is, best way to test.
 import fs from 'fs';
-import { dbERR } from "../../processes/statusReport";
 import { statusReport } from "../../processes/statusReport";
 
 const inistring = './build/settings/rules.ini' // Fs loads strings from index.js

@@ -1,14 +1,6 @@
 import winston from 'winston'; // Winston for logging
 import Discord from 'discord.js'; // Discord for embeds
-import { genericError } from "../db/JS/database.js"; // Our generic db error
 import { db } from "../index.js"; // Our db to read data
-
-export const dbERR = (err) => {
-    winston.error(err)
-    return msg.channel.send({
-        embed: genericError()
-    })
-}
 
 export async function statusReport(ID) {
     return db.getGuildData(ID)
@@ -21,5 +13,5 @@ export async function statusReport(ID) {
             });
             return format;
         })
-        .catch(dbERR)
+        .catch((err) => winston.error(err))
 }

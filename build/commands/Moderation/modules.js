@@ -1,6 +1,7 @@
 import Discord from 'discord.js'; // Discord for embeds
+import winston from 'winston';
 import { statusReport } from "../../processes/statusReport";
-import { dbERR } from '../../processes/statusReport'
+import { genericError } from '../../db/JS/database'
 
 // The different ways people can enable/disable modules, which keywords it will accept.
 const enable = ['on', 'active', 'true', 'enable'];
@@ -65,7 +66,10 @@ if(module == "lewd") // The module we want to disable/enable
                 .setDescription("The lewd module has successfully been enabled.") // Degenercy may now begin.
             msg.channel.send(embed) // So yeah.
         })
-        .catch(dbERR) // Throw a generic error at the problem. Oh wait.
+        .catch((err) => {
+            winston.error(err)
+            msg.channel.send(genericError())
+        }) // Throw a generic error at the problem. Oh wait.
     }
     if(disable.some(word => action.toLowerCase().includes(word))) // exact same as above, but in reverse.
     {
@@ -76,7 +80,10 @@ if(module == "lewd") // The module we want to disable/enable
                 .setDescription("The lewd module has successfully been enabled.")
             msg.channel.send(embed)
         })
-        .catch(dbERR)
+        .catch((err) => {
+            winston.error(err)
+            msg.channel.send(genericError())
+        })
     }
 }
 
@@ -93,7 +100,10 @@ if(module == "discovery") // The module we want to disable/enable
                 .setDescription("The Discovery module has successfully been enabled.")
             msg.channel.send(embed) // So yeah.
         })
-        .catch(dbERR) // Throw a generic error at the problem. Oh wait.
+        .catch((err) => {
+            winston.error(err)
+            msg.channel.send(genericError())
+        }) // Throw a generic error at the problem. Oh wait.
     }
     if(disable.some(word => action.toLowerCase().includes(word))) // exact same as above, but in reverse.
     {
@@ -104,7 +114,10 @@ if(module == "discovery") // The module we want to disable/enable
                 .setDescription("The Discovery module has successfully been enabled.")
             msg.channel.send(embed)
         })
-        .catch(dbERR)
+        .catch((err) => {
+            winston.error(err)
+            msg.channel.send(genericError())
+        })
     }
 }
 

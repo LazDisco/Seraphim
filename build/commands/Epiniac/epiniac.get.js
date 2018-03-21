@@ -2,6 +2,7 @@ import sendArray from '../../processes/sendArray.js' // We need this to convert 
 import format from 'string-format' // We also need this for that same reason
 import moment from 'moment'; // Our timestamp is a string of numbers, lets fix that.
 import winston from 'winston'; // Turns out I wasn't getting any errors because I forgot to import winston.
+import { genericError } from "../../db/JS/database";
 // What a waste of 3 hours. Kill me. Just Monika Just Monika Just Monika Just Monika Just Monika Just Monika Just Monika
 
 const reportTemplate = require("../../settings/defaults.json").reportTemplate // Have a guess
@@ -46,7 +47,7 @@ module.exports.run = async (msg, args, client, db, ID) => {
 
     const dbERR = (err) => { // stupid way of saying if(err) throw (err)
         winston.error(err) // That being said, it is nice to get a message in Discord when something messes up
-        msg.channel.send("ERR: Something has gone wrong. See log file for details.")
+        msg.channel.send(genericError())
     }
 
     if (args[0] == "recent") {

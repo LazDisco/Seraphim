@@ -5,7 +5,6 @@ import moment from 'moment' // To format our unix timestamp
 import { disco } from '../index.js'; // disco for API
 import { db } from "../index.js"; // Our db to read data
 import { client } from "../index.js" // import client?????
-import { dbERR } from "./statusReport.js";
 import { statusReport } from "./statusReport.js";
 
 async function getPlayers() {

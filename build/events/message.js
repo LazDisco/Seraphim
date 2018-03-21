@@ -25,29 +25,7 @@ module.exports = (msg, db) => {
         /*
             This little area is for reaction texts, should I choose to use them.
         */
-
-        /*const sleepWords = ["sleepy", "tired", "sleep"];
-        if (sleepWords.some(word => msg.content.includes(word))) {
-            var embed = new Discord.RichEmbed()
-                .setColor('#663399')
-                .setImage('https://78.media.tumblr.com/d01b8fbef3330601513a0f0eacc83276/tumblr_nymaloSqjh1tydz8to1_500.gif');
-            await msg.channel.send(embed);
-            msg.reply("If you're tired, why not go to sleep?");
-        }
-
-        const remyWords = ["remy", "Remy"];
-        if (remyWords.some(word => msg.content.includes(word))) {
-            msg.channel.send("Remy? I hate that guy. Forlorn killed him though.")
-        }*/ // Removed because of stupid dan face
-
-        const danWords = ["DAN THE CUNT"]
-        if (danWords.some(word => msg.content.includes(word))) {
-            var embed = new Discord.RichEmbed()
-                .setColor('#663399')
-                .setImage('http://www.reactiongifs.us/wp-content/uploads/2013/07/ill_kill_you_office.gif');
-            await msg.channel.send(embed);
-            msg.reply("DEATH TO DAN");
-        }
+        
         const hekiboh = ["heki", "h e k i", "h e k", "boh", "b o h", "b oh",
             "bo h", "he ki", "h eki", "hek i", "хеки", "хе ки", "х еки", "хек и", "х е к и",
             "hëki", "h ë k i", "hë ki", "hëk i", "h ëki", "h3ki", "h3 ki", "h 3ki", "h3k i", "h3k1",

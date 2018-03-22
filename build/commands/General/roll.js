@@ -11,6 +11,11 @@
 */
 
 module.exports.run = async (msg, args, client, db, ID) => {
+
+    if(args[0] == "lanehacker") {
+        return msg.channel.send("https://i.imgur.com/OzhgxYf.png")
+    }
+
     const messageWords = msg.content.split(' ');
     const rollFlavor = messageWords.slice(2).join(' ');
 

@@ -56,3 +56,7 @@ client.on('message', async msg => {
 client.on('guildCreate', guild => {
     events.guildCreate(guild, db) // See guildCreate.js
 });
+
+/* client.on('guildMemberAdd', member => {
+    events.guildMemberAdd(member, db, client) // See guildMemberAdd.js
+}); */

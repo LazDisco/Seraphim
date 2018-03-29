@@ -6,13 +6,6 @@ import Discord from 'discord.js'; // Generic Error NEEDS US
 let defaultPrefix = "|"
 let defaultPlayerlistChannel = "playerlist"
 
-export async function genericError()
-    {
-        var embed = new Discord.RichEmbed() // New embed
-            .setDescription(`Something went wrong. See log file for details.`)
-            .setColor('#FF0000')
-        return embed
-    }
 module.exports = class { // This is used when we create a new instance in index.js
     constructor() {
         this.r = rethink({
@@ -34,12 +27,19 @@ module.exports = class { // This is used when we create a new instance in index.
             .catch(() => winston.warn("Playerlist table already exists.")) // We already have one.
             .finally(() => this.r.tableCreate('tags').run()) // You get the idea.
             .then(() => winston.info("Tags table created.")) // etc etc
-            .catch(() => winston.warn('Tags table already exists.')) // done
+            .catch(() => winston.warn('Tags table already exists.'))
+            .finally(() => this.r.tableCreate('custom').run())
+            .then(() => winston.info("customisation table created."))
+            .catch(() => winston.warn('customisation table already exists.'))
+            
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                     Guilds                                                                             /
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// Event Based Functions
 
     // Add Guild to Database - auto called when bot is added. Can be added via command in event of error
     createGuild(id) {
@@ -47,10 +47,8 @@ module.exports = class { // This is used when we create a new instance in index.
             id, // Set our primary key to be the ID of the guild
             prefix: defaultPrefix, // Set the default prefix
             playerlistChannel: defaultPlayerlistChannel, // Default playerlist channel
-            roles: [], // Empty array for self-asignable roles
-            // Below are modules. They have capital letters because it will save having to convert them just for the sake of looking nice.
-            Lewd: false, // Lewd Neko command, requested by Otto. Adding a failsafe so it can't be used in all servers and has to be enabled manually
-            Discovery: false
+            lewd: false, // Lewd Neko command, requested by Otto. Adding a failsafe so it can't be used in all servers and has to be enabled manually
+            discovery: false // Discovery based commands and the playerlist - Disabled by default as requires an API key to funciton
         }]).run();
     }
 
@@ -58,6 +56,9 @@ module.exports = class { // This is used when we create a new instance in index.
     resetGuild(id) {
         return this.r.table('guilds').getAll(id).delete().run()
     }
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// Data Management Functions
     
     // Command for pulling all the data. Rather than creating various functions that we pluck from, just pull it all then sort through what we need.
     getGuildData(id) {
@@ -76,51 +77,34 @@ module.exports = class { // This is used when we create a new instance in index.
         return this.r.table('guilds').get(id).update({
             playerlistChannel: newPlayerlistChannel
         }).run();
-    }
-
-    // Create a new self asignable role
-    setGuildSelfAsignRoles(id, roleName, authorName) {
-        return this.r.table('guilds').get(id).update({
-            roles: this.r.row('roles').append({
-                name: roleName,
-                author: authorName
-            })
-        }).run();
-    }
-
-    // Remove an existing self asignable role
-    /*removeGuildSelfAsignRoles(id, roleName) {
-        return this.r.table('guilds').getAll(id).filter({
-            roles: {}
-        }).delete().run()
-    }   */ // Uncomment when a working solution has been established. 
+    }    
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Module things
 
-enableLewdCommands(id) {
-    return this.r.table('guilds').get(id).update({
-        Lewd: true
-    }).run();
-}
+    enableLewdCommands(id) {
+        return this.r.table('guilds').get(id).update({
+            lewd: true
+        }).run();
+    }
 
-disableLewdCommands(id) {
-    return this.r.table('guilds').get(id).update({
-        Lewd: false
-    }).run();
-}
+    disableLewdCommands(id) {
+        return this.r.table('guilds').get(id).update({
+            lewd: false
+        }).run();
+    }
 
-enableDiscoCommands(id) {
-    return this.r.table('guilds').get(id).update({
-        Discovery: true
-    }).run();
-}
+    enableDiscoCommands(id) {
+        return this.r.table('guilds').get(id).update({
+            discovery: true
+        }).run();
+    }
 
-disableDiscoCommands(id) {
-    return this.r.table('guilds').get(id).update({
-        Discovery: false
-    }).run();
-}
+    disableDiscoCommands(id) {
+        return this.r.table('guilds').get(id).update({
+            discovery: false
+        }).run();
+    }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                     Epiniac                                                                            /
@@ -288,5 +272,60 @@ disableDiscoCommands(id) {
 
     listGuildTags(id) {
         return this.r.table('tags').filter({ guildID: id }).orderBy('tag').run()
+    }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                     Customisations                                                                     /
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    customisationInit(id) {
+        return this.r.table('custom').insert([{
+            id,
+            greetmsg: { state: false, msg: '.', channel: '.' },
+            byemsg: { state: false, msg: '.', channel: '.' }
+        }])
+    }
+
+    getCustomisations(id) {
+        return this.r.table('custom').getAll(id).without('id').run()
+    }
+
+    getRoles(id) {
+        return this.r.table('custom').getAll(id).without('id').without('greetmsg').without('byemsg').run()
+    }
+
+    /*enableGreetMessage(id, update, channelName) {
+        return this.r.table('custom').getAll(id).update(
+            {greetmsg: { state: true, msg: update, channel: channelName }}
+        ).run()
+    }
+
+    deleteGreetMessage(id) {
+        return this.r.table('custom').getAll(id).filter(this.r.row('greetmsg')).delete().run()
+    }
+
+    enableByeMessage(id, update, channelName) {
+        return this.r.table('custom').getAll(id).update({
+            byemsg: { state: true, msg: update, channel: channelName }
+        }).run()
+    }
+
+    deleteByeMessage(id) {
+        return this.r.table('custom').getAll(id).filter(this.r.row('byemsg')).delete().run()
+    } */
+
+    addRole(id, name) {
+        var roleName = `${name}`
+        return this.r.table('custom').getAll(id).update({
+            [roleName]: true
+        }).run()
+    }
+
+    removeRole(id, roleName) {
+        return this.r.table('custom').getAll(id).getField(`${roleName}`).delete().run()
+    }
+
+    purgeCustomisations(id) {
+        return this.r.table('custom').getAll(id).delete().run()
     }
 }

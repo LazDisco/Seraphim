@@ -9,12 +9,6 @@ module.exports.run = async (msg, args, client, db, ID) => {
     let guildMember = msg.member;
     var valid = false;
 
-    const dbERR = (err) => {
-        winston.error(err)
-        return msg.channel.send({
-            embed: genericError()
-        })
-    }
     if(!msg.guild.me.hasPermission('MANAGE_ROLES')) return msg.reply("ERR: Bot doesn't have manage roles permission.")
     
     if(one == undefined) return msg.reply("ERR: You didn't supply the correct parameters.")
@@ -57,17 +51,17 @@ module.exports.run = async (msg, args, client, db, ID) => {
         if (two == undefined) return msg.reply("ERR: You didn't supply a role to set.")
 
         if (msg.guild.roles.find('name', two) == undefined) return msg.reply("ERR: The role you supplied was is not a role within this guild.")
-        var authorName = msg.author.username + '#' + msg.author.discriminator // Get the name of the person setting it.
 
-        db.setGuildSelfAsignRoles(ID, two, authorName)
-            .then(() => {
+        db.addRole(ID, two)
+            .then((res) => {
+                console.log(res)
                 let embed = new Discord.RichEmbed()
                     .setColor('#00FF00')
                     .setDescription(`${two} has been added to the list of self-asignable roles`)
 
                 return msg.channel.send(embed)
             })
-            .catch(dbERR)
+            .catch(winston.error)
     }
 
     if (one == "remove") 
@@ -76,7 +70,7 @@ module.exports.run = async (msg, args, client, db, ID) => {
         if (!guildMember.hasPermission("ADMINISTRATOR")) return msg.reply("You must be set to Admin to use this command.");
         if (two == undefined) return msg.reply("ERR: You didn't supply a role to set.")
 
-        db.removeGuildSelfAsignRoles(ID, two)
+        db.removeRole(ID, two)
             .then((res) => {
                 console.log(res)
                 let embed = new Discord.RichEmbed()
@@ -85,7 +79,7 @@ module.exports.run = async (msg, args, client, db, ID) => {
 
                 return msg.channel.send(embed)
             })
-            .catch(dbERR)
+            .catch(winston.error)
     }
     if(valid == false)
     {
@@ -116,21 +110,22 @@ module.exports.run = async (msg, args, client, db, ID) => {
     }
     
     async function getEntries() {
-        return db.getGuildData(ID)
+        return db.getRoles(ID)
             .then((result) => {
-                var format = result[0].roles.map(function (element) {
+                if (result[0] == undefined) return;
+                var format = Object.keys(result[0]).map(function (element) {
                     return {
-                        'name': element.name,
-                        'author': element.author
+                        'name': element
                     };
                 });
                 return format;
             })
-            .catch(dbERR)
+            .catch(winston.error)
     }
 
     async function verifyEntries(roleName) {
         let list = await getEntries();
+        if(list == undefined) return false;
         if (list.filter(lst => (lst.name === roleName))) {
             return true;
         }
@@ -138,14 +133,10 @@ module.exports.run = async (msg, args, client, db, ID) => {
 
     async function formatEntries(format)
     {
-        if(JSON.stringify(format) == "[]") return noEntries(); // Check if object is empty and run the backup embed if it is
-
+        if(format == undefined) return noEntries()
+        
         let roles = format.reduce((accumulator, set) => {
             return accumulator + `${set.name}\n`
-        }, '')
-    
-        let authors = format.reduce((accumulator, set) => {
-            return accumulator + `${set.author}\n`
         }, '')                                            
         
         let time = new Date();
@@ -154,8 +145,6 @@ module.exports.run = async (msg, args, client, db, ID) => {
             .setColor('#663399') // Royal Purple - Brigand colour
             .setTimestamp(time) // What time is it?
             .addField("Role list:", "Role:\n" + roles, true)
-            .addField("Author of Role:", "Author:\n" + authors, true);
-
         return embed
     }
 

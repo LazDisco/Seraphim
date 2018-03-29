@@ -5,12 +5,13 @@ module.exports = (guild, db) => {
 
     // Add guild to DB
     db.createGuild(guild.id)
-        .then(() => winston.info(`Guild: ${guild.id} added to the db.`))
+        .then(() => winston.info(`Guild: ${guild.name} added to the db.`))
         .catch(winston.error)
     db.restoreShadowlog(guild.id)
-        .then(() => winston.info(`Guild: ${guild.id} was given the false shadowlog flag.`))
+        .then(() => winston.info(`Guild: ${guild.name} was given the false shadowlog flag.`))
         .catch(winston.error)
-
-        // I honestly thought that this file would be a lot bigger.
+    db.customisationInit(guild.id)
+        .then(() => winston.info(`Guild: ${guild.name} was added to the custom table.`))
+        .catch(winston.error)
 
 }

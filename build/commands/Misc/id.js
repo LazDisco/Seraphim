@@ -9,7 +9,7 @@
 
 import snekfetch from 'snekfetch';
 import winston from 'winston';
-import { genericError } from "../../db/JS/database";
+import { genericError } from "../../processes/statusReport";
 
 const API = "http://stardust.imperiumfl.com/stardust/ids"
 
@@ -17,7 +17,7 @@ module.exports.run = async (msg, args, client, db, ID) => {
   
     if(!args[0]) 
     {
-    msg.channel.send("Specify an argument.")
+        msg.channel.send("Specify an argument.")
     }
 
     let nick = args[0]

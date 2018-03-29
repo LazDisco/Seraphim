@@ -7,11 +7,19 @@ export async function statusReport(ID) {
         .then((result) => {
             var format = result.map(function (element) {
                 return {
-                    'lewd': element.Lewd,
-                    'discovery': element.Discovery
+                    'Lewd': element.lewd,
+                    'Discovery': element.discovery
                 };
             });
             return format;
         })
         .catch((err) => winston.error(err))
 }
+
+export async function genericError()
+    {
+        var embed = new Discord.RichEmbed() // New embed
+            .setDescription(`Something went wrong. See log file for details.`)
+            .setColor('#FF0000')
+        return embed
+    }

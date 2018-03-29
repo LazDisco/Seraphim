@@ -18,17 +18,6 @@ module.exports.run = async (msg, args, client, db, ID) => {
     {
         let format = await statusReport(ID)
         console.log(format)
-        console.log(Object.keys(format).length)
-
-        for (let index = 0; index < Object.keys(format).length; index++) {
-            const element = format[Object.keys(format)[index]];
-            console.log(element)
-
-            if(Object.values(element) == false) format[Object.keys(format)[index]] = "Disabled"
-            if(Object.values(element) == true) format[Object.keys(format)[index]] = "Enabled"            
-        }
-
-        console.log(format)
         let moduleNames = format.reduce((accumulator, set) => {
             var replaceSet = Object.keys(set)
             replaceSet = replaceSet.join('\n')
@@ -36,7 +25,11 @@ module.exports.run = async (msg, args, client, db, ID) => {
         }, '')
 
         let moduleStatus = format.reduce((accumulator, set) => {
-            var replaceSet = set[Object.keys(set)[0]]
+            var replaceSet = Object.values(set)
+            for(var i in replaceSet) {
+                if(replaceSet[i] == false) replaceSet[i] = "Disabled"
+                if(replaceSet[i] == true) replaceSet[i] = "Enabled"
+            }
             replaceSet = replaceSet.join('\n')
             return accumulator + replaceSet
         }, '')
@@ -51,7 +44,7 @@ module.exports.run = async (msg, args, client, db, ID) => {
         return msg.channel.send(embed); // Make sure we're not then greeted with an error for not including a change.
     }
 
-    if(!args[0] && !args[1]) return msg.reply("ERR: You didn't not specify whether to set it to active or inactive.")
+    if(args[0] && !args[1]) return msg.reply("ERR: You didn't not specify whether to set it to active or inactive.")
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 

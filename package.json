@@ -1,8 +1,8 @@
 {
-  "name": "thebrigandbot",
-  "version": "2.1.2",
+  "name": "seraphim",
+  "version": "3.0.0",
   "main": "index.js",
-  "repository": "https://github.com/LazDisco/The-Brigand-Bot",
+  "repository": "https://github.com/LazDisco/Seraphim",
   "license": "CC-BY-NC-SA-4.0",
   "devDependencies": {
     "babel-cli": "^6.24.1",
